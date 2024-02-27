@@ -24,5 +24,7 @@
 
     <color name="mainFeedBackground">@color/colorPrimary</color>
 
+    <color name="tvShowsBackground">@color/colorPrimary</color>
+
 
 </resources>

@@ -1,8 +1,10 @@
 package ru.androidschool.intensiv.data
 
-class Movie(
-    var title: String? = "",
-    var voteAverage: Double = 0.0
+data class Movie(
+    val title: String,
+    val posterUrl: String,
+    val posterPreviewUrl: String,
+    val voteAverage: Double
 ) {
     val rating: Float
         get() = voteAverage.div(2).toFloat()
