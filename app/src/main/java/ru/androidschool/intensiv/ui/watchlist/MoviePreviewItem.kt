@@ -18,9 +18,8 @@ class MoviePreviewItem(
         view.imagePreview.setOnClickListener {
             onClick.invoke(content)
         }
-        // TODO Получать из модели
         Picasso.get()
-            .load("https://www.kinopoisk.ru/images/film_big/1143242.jpg")
+            .load(content.posterPreviewUrl)
             .into(view.imagePreview)
     }
 

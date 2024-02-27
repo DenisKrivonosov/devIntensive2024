@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/tvShowsBackground"
+    android:padding="16dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/image_preview"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/tv_show_height"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent"
+        tools:background="@color/white"
+        tools:src="@drawable/ic_avatar" />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@id/movie_rating"
+        app:layout_constraintStart_toStartOf="@id/image_preview"
+        app:layout_constraintTop_toBottomOf="@id/image_preview"
+        tools:text="Мир дикого запада"
+        tools:textColor="@color/white" />
+
+    <androidx.appcompat.widget.AppCompatRatingBar
+        android:id="@+id/movie_rating"
+        style="@style/Base.Widget.AppCompat.RatingBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:progressBackgroundTint="@color/colorControlNormal"
+        android:stepSize="0.5"
+        app:layout_constraintEnd_toEndOf="@id/image_preview"
+        app:layout_constraintTop_toBottomOf="@id/image_preview"
+        tools:rating="5" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
