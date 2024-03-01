@@ -51,6 +51,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$supportLibVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
     implementation "com.google.android.material:material:$materialVersion"
+    implementation "com.github.kirich1409:viewbindingpropertydelegate-full:$viewBindingDelegate"
 
     // Architecture components
     implementation "androidx.core:core-ktx:$coreVersion"
