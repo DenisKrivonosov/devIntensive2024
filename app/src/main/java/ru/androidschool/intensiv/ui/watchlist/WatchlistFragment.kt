@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import by.kirich1409.viewbindingdelegate.CreateMethod
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import ru.androidschool.intensiv.data.MockRepository
@@ -13,11 +15,7 @@ import ru.androidschool.intensiv.databinding.FragmentWatchlistBinding
 
 class WatchlistFragment : Fragment() {
 
-    private var _binding: FragmentWatchlistBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private val binding: FragmentWatchlistBinding by viewBinding(CreateMethod.INFLATE)
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
@@ -28,7 +26,6 @@ class WatchlistFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentWatchlistBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -46,11 +43,6 @@ class WatchlistFragment : Fragment() {
             }.toList()
 
         binding.moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     companion object {

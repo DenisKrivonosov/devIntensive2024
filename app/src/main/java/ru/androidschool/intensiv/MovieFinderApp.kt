@@ -10,6 +10,7 @@ class MovieFinderApp : Application() {
         instance = this
         initDebugTools()
     }
+
     private fun initDebugTools() {
         if (BuildConfig.DEBUG) {
             initTimber()

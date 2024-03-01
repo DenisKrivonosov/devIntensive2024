@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
+import by.kirich1409.viewbindingdelegate.CreateMethod
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import ru.androidschool.intensiv.R
@@ -17,11 +19,7 @@ import ru.androidschool.intensiv.ui.feed.FeedFragment
 
 class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
 
-    private var _binding: TvShowsFragmentBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private val binding: TvShowsFragmentBinding by viewBinding(CreateMethod.INFLATE)
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
@@ -41,7 +39,6 @@ class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = TvShowsFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 

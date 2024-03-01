@@ -2,10 +2,11 @@ package ru.androidschool.intensiv.ui
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
+import by.kirich1409.viewbindingdelegate.CreateMethod
+import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.databinding.SearchToolbarBinding
 
@@ -15,7 +16,7 @@ class SearchBar @JvmOverloads constructor(
     defStyle: Int = 0
 ) : FrameLayout(context, attrs, defStyle) {
 
-    lateinit var binding: SearchToolbarBinding
+    val binding: SearchToolbarBinding by viewBinding(CreateMethod.INFLATE)
 
     private var hint: String = ""
     private var isCancelVisible: Boolean = true
@@ -40,7 +41,6 @@ class SearchBar @JvmOverloads constructor(
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-        binding = SearchToolbarBinding.inflate(LayoutInflater.from(context), this, true)
         binding.searchEditText.hint = hint
         binding.deleteTextButton.setOnClickListener {
             binding.searchEditText.text.clear()

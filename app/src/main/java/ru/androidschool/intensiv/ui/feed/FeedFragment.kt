@@ -1,10 +1,16 @@
 package ru.androidschool.intensiv.ui.feed
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
+import by.kirich1409.viewbindingdelegate.CreateMethod
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import ru.androidschool.intensiv.R
@@ -17,13 +23,8 @@ import timber.log.Timber
 
 class FeedFragment : Fragment(R.layout.feed_fragment) {
 
-    private var _binding: FeedFragmentBinding? = null
-    private var _searchBinding: FeedHeaderBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-    private val searchBinding get() = _searchBinding!!
+    private val binding: FeedFragmentBinding by viewBinding(CreateMethod.INFLATE)
+    private val searchBinding by viewBinding(FeedHeaderBinding::bind)
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
@@ -43,8 +44,6 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FeedFragmentBinding.inflate(inflater, container, false)
-        _searchBinding = FeedHeaderBinding.bind(binding.root)
         return binding.root
     }
 
@@ -61,17 +60,15 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
 
         // Используя Мок-репозиторий получаем фэйковый список фильмов
         val moviesList =
-                MockRepository.getMovies().map {
-                    MovieItem(it) { movie ->
-                        openMovieDetails(
-                            movie
-                        )
-                    }
-                }.toList()
-
+            MockRepository.getMovies().map {
+                MovieItem(it) { movie ->
+                    openMovieDetails(
+                        movie
+                    )
+                }
+            }.toList()
 
         binding.moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
-
     }
 
     private fun openMovieDetails(movie: Movie) {
@@ -93,12 +90,6 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.main_menu, menu)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-        _searchBinding = null
     }
 
     companion object {
