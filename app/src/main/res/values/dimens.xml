@@ -16,6 +16,10 @@
     <dimen name="movie_card_text_width">96dp</dimen>
     <dimen name="close_width">20dp</dimen>
 
+    <!-- Movie Cast Item -->
+    <dimen name="movie_cast_avatar_width">40dp</dimen>
+    <dimen name="movie_cast_avatar_height">40dp</dimen>
+
     <dimen name="dimens_32">32dp</dimen>
     <dimen name="search_bar_height">56dp</dimen>
     <dimen name="min_height">100dp</dimen>

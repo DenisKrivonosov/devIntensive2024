@@ -16,6 +16,7 @@ groupieVersion = "2.10.1"
 junitVersion = "4.13.2"
 kotlinVersion = "1.9.21"
 ktlintVersion = "0.36.0"
+coordinatorLayoutVersion = "1.2.0"
 lifecycleExtensionVersion = "2.2.0"
 lifecycleVersion = "2.7.0"
 materialVersion = "1.11.0"
@@ -48,6 +49,7 @@ lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", v
 lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleVersion" }
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
 material = { module = "com.google.android.material:material", version.ref = "materialVersion" }
+coordinatorLayout = { module = "androidx.coordinatorlayout:coordinatorlayout", version.ref = "coordinatorLayoutVersion" }
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtxVersion" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtxVersion" }
 picasso = { module = "com.squareup.picasso:picasso", version.ref = "picassoVersion" }

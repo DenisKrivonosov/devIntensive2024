@@ -5,7 +5,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.androidschool.intensiv.network.BigDecimalNumericSerializer
-import ru.androidschool.intensiv.network.deserializer.TvShowDeserializer
+import ru.androidschool.intensiv.network.deserializers.TvShowDeserializer
 import java.math.BigDecimal
 
 private const val RATING_TO_STARS_RATIO = 2
@@ -38,7 +38,7 @@ data class TvShow @OptIn(ExperimentalSerializationApi::class) constructor(
     val popularity: BigDecimal,
 
     @SerialName("poster_path")
-    val posterPath: String,
+    val posterPath: String?,
 
     @SerialName("first_air_date")
     val firstAirDate: String,

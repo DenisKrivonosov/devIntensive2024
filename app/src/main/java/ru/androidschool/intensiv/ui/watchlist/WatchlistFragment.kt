@@ -20,8 +20,8 @@ import ru.androidschool.intensiv.data.MovieDbRepository
 import ru.androidschool.intensiv.data.model.movies.Movie
 import ru.androidschool.intensiv.data.model.movies.MoviesResponse
 import ru.androidschool.intensiv.databinding.FragmentWatchlistBinding
-import ru.androidschool.intensiv.ui.feed.FeedFragment
 import ru.androidschool.intensiv.ui.feed.MovieItem
+import ru.androidschool.intensiv.ui.movie_details.MovieDetailsFragment.Companion.KEY_MOVIE_ID
 import timber.log.Timber
 
 class WatchlistFragment : Fragment() {
@@ -79,7 +79,7 @@ class WatchlistFragment : Fragment() {
 
     private fun openMovieDetails(movie: Movie) {
         val bundle = Bundle()
-        bundle.putString(FeedFragment.KEY_TITLE, movie.title)
+        bundle.putInt(KEY_MOVIE_ID, movie.id)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)
     }
 

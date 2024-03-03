@@ -23,6 +23,7 @@ import ru.androidschool.intensiv.data.model.movies.MoviesResponse
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
 import ru.androidschool.intensiv.ui.afterTextChanged
+import ru.androidschool.intensiv.ui.movie_details.MovieDetailsFragment.Companion.KEY_MOVIE_ID
 import timber.log.Timber
 
 class FeedFragment : Fragment(R.layout.feed_fragment) {
@@ -54,7 +55,6 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         searchBinding.searchToolbar.binding.searchEditText.afterTextChanged {
             Timber.d(it.toString())
             if (it.toString().length > MIN_LENGTH) {
@@ -70,11 +70,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
                 response: Response<MoviesResponse>
             ) {
                 val moviesList = response.body()!!.results.map {
-                    MovieItem(it) { movie ->
-                        openMovieDetails(
-                            movie
-                        )
-                    }
+                    MovieItem(it) { movie -> openMovieDetails(movie) }
                 }
                 binding.moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
 
@@ -89,7 +85,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
 
     private fun openMovieDetails(movie: Movie) {
         val bundle = Bundle()
-        bundle.putString(KEY_TITLE, movie.title)
+        bundle.putInt(KEY_MOVIE_ID, movie.id)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)
     }
 
@@ -111,7 +107,6 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     companion object {
         private val TAG = FeedFragment::class.java.simpleName
         const val MIN_LENGTH = 3
-        const val KEY_TITLE = "title"
         const val KEY_SEARCH = "search"
     }
 }

@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.network.deserializer
+package ru.androidschool.intensiv.network.deserializers
 
 import androidx.annotation.Keep
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -33,13 +33,13 @@ internal object MovieDeserializer : KSerializer<Movie> {
         return Movie(
             id = remote.id,
             adult = remote.adult,
-            backdropPath = POSTER_PATH_PREFIX + remote.backdropPath,
+            backdropPath = "${POSTER_PATH_PREFIX}${remote.backdropPath}",
             genreIds = remote.genreIds,
             originalLanguage = remote.originalLanguage,
             originalTitle = remote.originalTitle,
             overview = remote.overview,
             popularity = remote.popularity,
-            posterPath = POSTER_PATH_PREFIX + remote.posterPath,
+            posterPath = "$POSTER_PATH_PREFIX${remote.posterPath}",
             releaseDate = remote.releaseDate,
             title = remote.title,
             video = remote.video,

@@ -56,6 +56,9 @@ dependencies {
     implementation libs.material
     implementation libs.viewbindingpropertydelegate.full
 
+    //coordinatorLayout
+    implementation libs.coordinatorLayout
+
     // Architecture components
     implementation libs.core.ktx
     implementation libs.lifecycle.extensions

@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.network.deserializer
+package ru.androidschool.intensiv.network.deserializers
 
 import androidx.annotation.Keep
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -34,7 +34,7 @@ internal object TvShowDeserializer : KSerializer<TvShow> {
             id = remote.id,
             adult = remote.adult,
             backdropPath = if (remote.backdropPath != null) {
-                POSTER_PATH_PREFIX + remote.backdropPath
+                "${POSTER_PATH_PREFIX}${remote.backdropPath}"
             } else {
                 null
             },
@@ -43,7 +43,11 @@ internal object TvShowDeserializer : KSerializer<TvShow> {
             originalName = remote.originalName,
             overview = remote.overview,
             popularity = remote.popularity,
-            posterPath = POSTER_PATH_PREFIX + remote.posterPath,
+            posterPath = if (remote.posterPath != null) {
+                "${POSTER_PATH_PREFIX}${remote.posterPath}"
+            } else {
+                null
+            },
             firstAirDate = remote.firstAirDate,
             originalCountry = remote.originalCountry,
             voteAverage = remote.voteAverage,
@@ -80,7 +84,7 @@ internal object TvShowDeserializer : KSerializer<TvShow> {
         val popularity: BigDecimal,
 
         @SerialName("poster_path")
-        val posterPath: String,
+        val posterPath: String?,
 
         @SerialName("first_air_date")
         val firstAirDate: String,
