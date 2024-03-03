@@ -1,5 +1,8 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    alias(libs.plugins.kotlinxSerialization)
+}
 
 apply from: "../ktlint.gradle"
 
@@ -79,5 +82,14 @@ dependencies {
     implementation libs.groupie
     implementation libs.groupie.viewbinding
 
+    //Logging
     implementation libs.timber
+
+    //Network
+    implementation libs.retrofit
+    implementation libs.logging.interceptor
+
+    //Serialization
+    implementation libs.kotlinx.serialization.json
+    implementation libs.retrofit2.kotlinx.serialization.converter
 }

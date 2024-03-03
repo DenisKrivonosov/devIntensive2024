@@ -5,17 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.navOptions
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.MockRepository
-import ru.androidschool.intensiv.data.Movie
+import ru.androidschool.intensiv.data.MovieDbRepository
+import ru.androidschool.intensiv.data.model.tv_series.TvShowsResponse
 import ru.androidschool.intensiv.databinding.TvShowsFragmentBinding
-import ru.androidschool.intensiv.ui.feed.FeedFragment
+import timber.log.Timber
 
 class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
 
@@ -23,15 +24,6 @@ class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
-    }
-
-    private val options = navOptions {
-        anim {
-            enter = R.anim.slide_in_right
-            exit = R.anim.slide_out_left
-            popEnter = R.anim.slide_in_left
-            popExit = R.anim.slide_out_right
-        }
     }
 
     override fun onCreateView(
@@ -45,20 +37,29 @@ class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Используя Мок-репозиторий получаем фэйковый список телесериалов
-        val moviesList =
-            MockRepository.getMovies().map {
-                TvShowItem(it) { tvShow -> openMovieDetails(tvShow) }
-            }.toList()
+        val call = MovieDbRepository.getPopularTvShows(page = 1, language = "ru")
 
+        call.enqueue(object : Callback<TvShowsResponse> {
+            override fun onResponse(
+                call: Call<TvShowsResponse>,
+                response: Response<TvShowsResponse>
+            ) {
+                val moviesList = response.body()!!.results.map {
+                    TvShowItem(it) {}
+                }
+                binding.tvShowsRecyclerView.adapter = adapter.apply { addAll(moviesList) }
 
-        binding.tvShowsRecyclerView.adapter = adapter.apply { addAll(moviesList) }
+            }
 
+            override fun onFailure(call: Call<TvShowsResponse>, t: Throwable) {
+                // Log error here since request failed
+                Timber.e(TAG, t.toString())
+            }
+        })
     }
 
-    private fun openMovieDetails(movie: Movie) {
-        val bundle = Bundle()
-        bundle.putString(FeedFragment.KEY_TITLE, movie.title)
-        findNavController().navigate(R.id.movie_details_fragment, bundle, options)
+    companion object {
+
+        private val TAG = TvShowsFragment::class.java.simpleName
     }
 }

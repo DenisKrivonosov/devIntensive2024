@@ -13,9 +13,13 @@ import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.MockRepository
-import ru.androidschool.intensiv.data.Movie
+import ru.androidschool.intensiv.data.MovieDbRepository
+import ru.androidschool.intensiv.data.model.movies.Movie
+import ru.androidschool.intensiv.data.model.movies.MoviesResponse
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
 import ru.androidschool.intensiv.ui.afterTextChanged
@@ -58,17 +62,29 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
             }
         }
 
-        // Используя Мок-репозиторий получаем фэйковый список фильмов
-        val moviesList =
-            MockRepository.getMovies().map {
-                MovieItem(it) { movie ->
-                    openMovieDetails(
-                        movie
-                    )
-                }
-            }.toList()
+        val call = MovieDbRepository.getNowPlayingMovies(page = 1, language = "ru")
 
-        binding.moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
+        call.enqueue(object : Callback<MoviesResponse> {
+            override fun onResponse(
+                call: Call<MoviesResponse>,
+                response: Response<MoviesResponse>
+            ) {
+                val moviesList = response.body()!!.results.map {
+                    MovieItem(it) { movie ->
+                        openMovieDetails(
+                            movie
+                        )
+                    }
+                }
+                binding.moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
+
+            }
+
+            override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
+                // Log error here since request failed
+                Timber.e(TAG, t.toString())
+            }
+        })
     }
 
     private fun openMovieDetails(movie: Movie) {
@@ -93,6 +109,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     }
 
     companion object {
+        private val TAG = FeedFragment::class.java.simpleName
         const val MIN_LENGTH = 3
         const val KEY_TITLE = "title"
         const val KEY_SEARCH = "search"
