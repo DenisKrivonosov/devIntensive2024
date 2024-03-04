@@ -20,7 +20,10 @@ import java.math.BigDecimal
 @ExperimentalSerializationApi
 class BigDecimalNumericSerializer : KSerializer<BigDecimal> {
 
-    override val descriptor = PrimitiveSerialDescriptor("java.math.BigDecimal", PrimitiveKind.DOUBLE)
+    override val descriptor = PrimitiveSerialDescriptor(
+        serialName = "java.math.BigDecimal",
+        kind = PrimitiveKind.DOUBLE
+    )
 
     override fun deserialize(decoder: Decoder): BigDecimal {
         return if (decoder is JsonDecoder) {
