@@ -16,6 +16,20 @@ object MovieDbRepository {
         return MovieApiClient.apiClient.getNowPlayingMovies(page, language)
     }
 
+    fun getUpcomingMovies(
+        page: Int,
+        language: String
+    ): Call<MoviesResponse> {
+        return MovieApiClient.apiClient.getUpcomingMovies(page, language)
+    }
+
+    fun getPopularMovies(
+        page: Int,
+        language: String
+    ): Call<MoviesResponse> {
+        return MovieApiClient.apiClient.getPopularMovies(page, language)
+    }
+
     fun getPopularTvShows(
         page: Int,
         language: String

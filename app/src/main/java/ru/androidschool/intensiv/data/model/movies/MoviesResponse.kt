@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 data class MoviesResponse(
 
     @SerialName("dates")
-    val datesRange: MoviesDatesRange,
+    val datesRange: MoviesDatesRange? = null,
     val page: Int,
     val results: List<Movie>
 )

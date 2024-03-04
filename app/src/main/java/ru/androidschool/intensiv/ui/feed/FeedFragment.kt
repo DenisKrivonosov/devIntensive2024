@@ -62,9 +62,11 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
             }
         }
 
-        val call = MovieDbRepository.getNowPlayingMovies(page = 1, language = "ru")
+        val nowPlayingMoviesCall = MovieDbRepository.getNowPlayingMovies(page = 1, language = "ru")
+        val upcomingMoviesCall = MovieDbRepository.getUpcomingMovies(page = 1, language = "ru")
+        val getPopularMoviesCall = MovieDbRepository.getPopularMovies(page = 1, language = "ru")
 
-        call.enqueue(object : Callback<MoviesResponse> {
+        nowPlayingMoviesCall.enqueue(object : Callback<MoviesResponse> {
             override fun onResponse(
                 call: Call<MoviesResponse>,
                 response: Response<MoviesResponse>
@@ -74,6 +76,36 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
                 }
                 binding.moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
 
+            }
+
+            override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
+                // Log error here since request failed
+                Timber.e(TAG, t.toString())
+            }
+        })
+
+        upcomingMoviesCall.enqueue(object : Callback<MoviesResponse> {
+            override fun onResponse(
+                call: Call<MoviesResponse>,
+                response: Response<MoviesResponse>
+            ) {
+                val moviesList = response.body()
+                Timber.d(TAG, moviesList.toString())
+            }
+
+            override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
+                // Log error here since request failed
+                Timber.e(TAG, t.toString())
+            }
+        })
+
+        getPopularMoviesCall.enqueue(object : Callback<MoviesResponse> {
+            override fun onResponse(
+                call: Call<MoviesResponse>,
+                response: Response<MoviesResponse>
+            ) {
+                val moviesList = response.body()
+                Timber.d(TAG, moviesList.toString())
             }
 
             override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {

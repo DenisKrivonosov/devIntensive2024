@@ -17,6 +17,18 @@ interface MovieApiInterface {
         @Query("language") language: String
     ): Call<MoviesResponse>
 
+    @GET("movie/upcoming")
+    fun getUpcomingMovies(
+        @Query("page") page: Int,
+        @Query("language") language: String
+    ): Call<MoviesResponse>
+
+    @GET("movie/popular")
+    fun getPopularMovies(
+        @Query("page") page: Int,
+        @Query("language") language: String
+    ): Call<MoviesResponse>
+
     @GET("tv/popular")
     fun getPopularTvShows(
         @Query("page") page: Int,

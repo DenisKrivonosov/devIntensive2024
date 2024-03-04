@@ -53,9 +53,9 @@ class WatchlistFragment : Fragment() {
         binding.moviesRecyclerView.layoutManager = GridLayoutManager(context, 4)
         binding.moviesRecyclerView.adapter = adapter.apply { addAll(listOf()) }
 
-        val call = MovieDbRepository.getNowPlayingMovies(page = 1, language = "ru")
+        val nowPlayingMoviesCall = MovieDbRepository.getNowPlayingMovies(page = 1, language = "ru")
 
-        call.enqueue(object : Callback<MoviesResponse> {
+        nowPlayingMoviesCall.enqueue(object : Callback<MoviesResponse> {
             override fun onResponse(
                 call: Call<MoviesResponse>,
                 response: Response<MoviesResponse>
