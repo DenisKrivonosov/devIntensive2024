@@ -102,6 +102,10 @@ dependencies {
     implementation libs.retrofit
     implementation libs.logging.interceptor
 
+    //rx
+    implementation libs.rxandroid
+    implementation libs.rxjava
+
     //Serialization
     implementation libs.kotlinx.serialization.json
     implementation libs.retrofit2.kotlinx.serialization.converter

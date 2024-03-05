@@ -5,6 +5,8 @@ kotlinxSerializationJson = "1.6.3"
 loggingInterceptor = "4.12.0"
 retrofit = "2.9.0"
 retrofit2KotlinxSerializationConverter = "1.0.0"
+rxandroid = "2.1.1"
+rxjava = "2.2.21"
 targetSdk = "33"
 minSdk = "24"
 
@@ -58,6 +60,8 @@ recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "r
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit2-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit2KotlinxSerializationConverter" }
 runner = { module = "androidx.test:runner", version.ref = "runnerVersion" }
+rxandroid = { module = "io.reactivex.rxjava2:rxandroid", version.ref = "rxandroid" }
+rxjava = { module = "io.reactivex.rxjava2:rxjava", version.ref = "rxjava" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timberVersion" }
 viewbindingpropertydelegate-full = { module = "com.github.kirich1409:viewbindingpropertydelegate-full", version.ref = "viewBindingDelegate" }
 
