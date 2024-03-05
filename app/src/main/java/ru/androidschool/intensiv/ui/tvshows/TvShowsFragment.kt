@@ -9,9 +9,10 @@ import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import io.reactivex.SingleObserver
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.MovieDbRepository
 import ru.androidschool.intensiv.data.model.tv_series.TvShowsResponse
@@ -37,25 +38,30 @@ class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val call = MovieDbRepository.getPopularTvShows(page = 1, language = "ru")
+        val popularTvShowsObservable = MovieDbRepository.getPopularTvShows(language = "ru")
 
-        call.enqueue(object : Callback<TvShowsResponse> {
-            override fun onResponse(
-                call: Call<TvShowsResponse>,
-                response: Response<TvShowsResponse>
-            ) {
-                val moviesList = response.body()!!.results.map {
-                    TvShowItem(it) {}
+        popularTvShowsObservable
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                object : SingleObserver<TvShowsResponse> {
+                    override fun onSubscribe(d: Disposable) {
+                        Timber.d(TAG, "subscribed on getPopularMoviesObservable")
+                    }
+
+                    override fun onError(e: Throwable) {
+                        // Log error here since request failed
+                        Timber.e(TAG, e.toString())
+                    }
+
+                    override fun onSuccess(response: TvShowsResponse) {
+                        val moviesList = response.results.map {
+                            TvShowItem(it) {}
+                        }
+                        binding.tvShowsRecyclerView.adapter = adapter.apply { addAll(moviesList) }
+                    }
                 }
-                binding.tvShowsRecyclerView.adapter = adapter.apply { addAll(moviesList) }
-
-            }
-
-            override fun onFailure(call: Call<TvShowsResponse>, t: Throwable) {
-                // Log error here since request failed
-                Timber.e(TAG, t.toString())
-            }
-        })
+            )
     }
 
     companion object {

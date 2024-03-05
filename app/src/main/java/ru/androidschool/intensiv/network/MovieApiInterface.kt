@@ -1,6 +1,7 @@
 package ru.androidschool.intensiv.network
 
 import androidx.annotation.IntRange
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -22,7 +23,7 @@ interface MovieApiInterface {
     fun getNowPlayingMovies(
         @Query("page") @IntRange(from = 1) page: Int = 1,
         @Query("language") language: String
-    ): Call<MoviesResponse>
+    ): Single<MoviesResponse>
 
     /**
      * API upcoming movies: https://developer.themoviedb.org/reference/movie-upcoming-list
@@ -31,7 +32,7 @@ interface MovieApiInterface {
     fun getUpcomingMovies(
         @Query("page") @IntRange(from = 1) page: Int = 1,
         @Query("language") language: String
-    ): Call<MoviesResponse>
+    ): Single<MoviesResponse>
 
     /**
      * API popular movies: https://developer.themoviedb.org/reference/movie-popular-list
@@ -40,7 +41,7 @@ interface MovieApiInterface {
     fun getPopularMovies(
         @Query("page") @IntRange(from = 1) page: Int = 1,
         @Query("language") language: String
-    ): Call<MoviesResponse>
+    ): Single<MoviesResponse>
 
     /**
      * API popular tv shows: https://developer.themoviedb.org/reference/tv-series-popular-list
@@ -49,7 +50,7 @@ interface MovieApiInterface {
     fun getPopularTvShows(
         @Query("page") @IntRange(from = 1) page: Int = 1,
         @Query("language") language: String
-    ): Call<TvShowsResponse>
+    ): Single<TvShowsResponse>
 
     /**
      * API movie details: https://developer.themoviedb.org/reference/movie-details
@@ -58,7 +59,7 @@ interface MovieApiInterface {
     fun getMovieDetails(
         @Path("movieId") movieId: Int,
         @Query("language") language: String
-    ): Call<MovieDetails>
+    ): Single<MovieDetails>
 
     /**
      * API movie credits: https://developer.themoviedb.org/reference/movie-credits
@@ -67,5 +68,5 @@ interface MovieApiInterface {
     fun getMovieCredits(
         @Path("movieId") movieId: Int,
         @Query("language") language: String
-    ): Call<MovieCreditsResponse>
+    ): Single<MovieCreditsResponse>
 }

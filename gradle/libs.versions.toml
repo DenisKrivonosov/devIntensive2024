@@ -33,6 +33,7 @@ viewBindingDelegate = "1.5.9"
 
 [libraries]
 
+retrofit-adapter-rxjava2 = { module = "com.squareup.retrofit2:adapter-rxjava2", version.ref = "retrofit" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "supportLibVersion" }
 constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintLayoutVersion" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreVersion" }
