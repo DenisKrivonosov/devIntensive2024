@@ -24,7 +24,5 @@ class MovieFinderApp : Application() {
     companion object {
         var instance: MovieFinderApp? = null
             private set
-
-        const val API_KEY = BuildConfig.THE_MOVIE_DATABASE_API
     }
 }

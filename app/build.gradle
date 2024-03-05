@@ -20,10 +20,17 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField 'String', 'THE_MOVIE_DATABASE_API', keystoreProperties['THE_MOVIE_DATABASE_API']
+        buildConfigField 'String', 'THE_MOVIE_DATABASE_API_KEY', keystoreProperties['THE_MOVIE_DATABASE_API_KEY']
     }
     buildTypes {
+        debug {
+            buildConfigField "String", 'BASE_URL', "\"https://api.themoviedb.org/3/\""
+        }
+        staging {
+            buildConfigField "String", 'BASE_URL', "\"https://api.themoviedb.org/3/\""
+        }
         release {
+            buildConfigField "String", 'BASE_URL', "\"https://api.themoviedb.org/3/\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
