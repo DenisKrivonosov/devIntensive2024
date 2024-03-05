@@ -11,18 +11,17 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.decodeFromJsonElement
+import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.data.model.common.Cast
 import ru.androidschool.intensiv.network.BigDecimalNumericSerializer
 import java.math.BigDecimal
-
-private const val POSTER_PATH_PREFIX = "https://image.tmdb.org/t/p/w440_and_h660_face/"
 
 internal object CastDeserializer : KSerializer<Cast> {
 
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Movie")
 
     override fun serialize(encoder: Encoder, value: Cast) {
-        throw UnsupportedOperationException("Serialization of NotActivatedLoan is not supported")
+        throw UnsupportedOperationException("Serialization of Cast is not supported")
     }
 
     override fun deserialize(decoder: Decoder): Cast {
@@ -39,7 +38,7 @@ internal object CastDeserializer : KSerializer<Cast> {
             originalName = remote.originalName,
             popularity = remote.popularity,
             profilePath = if (remote.profilePath != null) {
-                "${POSTER_PATH_PREFIX}${remote.profilePath}"
+                "${BuildConfig.POSTER_PATH_PREFIX}${remote.profilePath}"
             } else {
                 null
             },

@@ -25,12 +25,15 @@ android {
     buildTypes {
         debug {
             buildConfigField "String", 'BASE_URL', "\"https://api.themoviedb.org/3/\""
+            buildConfigField "String", 'POSTER_PATH_PREFIX', "\"https://image.tmdb.org/t/p/w440_and_h660_face/\""
         }
         staging {
             buildConfigField "String", 'BASE_URL', "\"https://api.themoviedb.org/3/\""
+            buildConfigField "String", 'POSTER_PATH_PREFIX', "\"https://image.tmdb.org/t/p/w440_and_h660_face/\""
         }
         release {
             buildConfigField "String", 'BASE_URL', "\"https://api.themoviedb.org/3/\""
+            buildConfigField "String", 'POSTER_PATH_PREFIX', "\"https://image.tmdb.org/t/p/w440_and_h660_face/\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
