@@ -1,6 +1,8 @@
 package ru.androidschool.intensiv
 
-import org.junit.Assert.assertEquals
+import io.reactivex.Observable
+import io.reactivex.Observer
+import io.reactivex.disposables.Disposable
 import org.junit.Test
 
 /**
@@ -11,6 +13,30 @@ import org.junit.Test
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+        val source: Observable<String> = Observable.create { emitter ->
+            emitter.onNext("kotlin")
+            emitter.onNext("Java")
+            emitter.onNext("Go")
+            emitter.onNext("Hello")
+            emitter.onNext("Hello")
+        }
+        source.subscribe(object : Observer<String> {
+            override fun onSubscribe(d: Disposable) {
+                println("onSubscribe")
+            }
+
+            override fun onError(e: Throwable) {
+                println("onError")
+            }
+
+            override fun onComplete() {
+                println("onComplete")
+            }
+
+            override fun onNext(t: String) {
+                println("onNext")
+                println(t)
+            }
+        })
     }
 }
