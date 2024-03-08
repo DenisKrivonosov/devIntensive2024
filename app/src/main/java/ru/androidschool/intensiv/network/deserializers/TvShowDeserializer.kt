@@ -32,20 +32,16 @@ internal object TvShowDeserializer : KSerializer<TvShow> {
         return TvShow(
             id = remote.id,
             adult = remote.adult,
-            backdropPath = if (remote.backdropPath != null) {
+            backdropPath = remote.backdropPath?.let {
                 "${BuildConfig.POSTER_PATH_PREFIX}${remote.backdropPath}"
-            } else {
-                null
             },
             genreIds = remote.genreIds,
             originalLanguage = remote.originalLanguage,
             originalName = remote.originalName,
             overview = remote.overview,
             popularity = remote.popularity,
-            posterPath = if (remote.posterPath != null) {
+            posterPath = remote.posterPath?.let {
                 "${BuildConfig.POSTER_PATH_PREFIX}${remote.posterPath}"
-            } else {
-                null
             },
             firstAirDate = remote.firstAirDate,
             originalCountry = remote.originalCountry,

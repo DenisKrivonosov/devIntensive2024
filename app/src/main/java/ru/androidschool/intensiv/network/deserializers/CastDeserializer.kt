@@ -37,10 +37,8 @@ internal object CastDeserializer : KSerializer<Cast> {
             name = remote.name,
             originalName = remote.originalName,
             popularity = remote.popularity,
-            profilePath = if (remote.profilePath != null) {
+            profilePath = remote.profilePath?.let {
                 "${BuildConfig.POSTER_PATH_PREFIX}${remote.profilePath}"
-            } else {
-                null
             },
             castId = remote.castId,
             character = remote.character,
