@@ -4,7 +4,7 @@ import android.view.View
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.viewbinding.BindableItem
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.Movie
+import ru.androidschool.intensiv.data.model.movies.Movie
 import ru.androidschool.intensiv.databinding.ItemWithTextBinding
 
 class MovieItem(
@@ -21,7 +21,7 @@ class MovieItem(
             onClick.invoke(content)
         }
         Picasso.get()
-            .load(content.posterUrl)
+            .load(content.posterPath)
             .into(view.imagePreview)
     }
 

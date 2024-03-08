@@ -1,5 +1,8 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    alias(libs.plugins.kotlinxSerialization)
+}
 
 apply from: "../ktlint.gradle"
 
@@ -10,9 +13,9 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
     defaultConfig {
         applicationId "ru.androidschool.intensiv"
-        minSdkVersion 21
-        targetSdkVersion 34
-        compileSdk 34
+        minSdk(libs.versions.minSdk.get().toInteger())
+        targetSdk(libs.versions.targetSdk.get().toInteger())
+        compileSdk(libs.versions.compileSdk.get().toInteger())
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -47,36 +50,49 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "androidx.appcompat:appcompat:$supportLibVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-    implementation "com.google.android.material:material:$materialVersion"
+    implementation libs.kotlin.stdlib.jdk7
+    implementation libs.appcompat
+    implementation libs.constraintlayout
+    implementation libs.material
+    implementation libs.viewbindingpropertydelegate.full
+
+    //coordinatorLayout
+    implementation libs.coordinatorLayout
 
     // Architecture components
-    implementation "androidx.core:core-ktx:$coreVersion"
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleExtensionVersion"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+    implementation libs.core.ktx
+    implementation libs.lifecycle.extensions
+    implementation libs.lifecycle.runtime.ktx
+    implementation libs.lifecycle.viewmodel.ktx
+    implementation libs.lifecycle.livedata.ktx
 
     // Testing
-    testImplementation "junit:junit:$junitVersion"
-    androidTestImplementation "androidx.test:runner:$runnerVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+    testImplementation libs.junit
+    androidTestImplementation libs.runner
+    androidTestImplementation libs.espresso.core
 
     // Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$rootProject.navigationVersion"
-    implementation "androidx.navigation:navigation-ui-ktx:$rootProject.navigationVersion"
+    implementation libs.navigation.fragment.ktx
+    implementation libs.navigation.ui.ktx
 
     // Picasso
-    implementation "com.squareup.picasso:picasso:$rootProject.picassoVersion"
-    implementation "jp.wasabeef:picasso-transformations:$rootProject.picassoTransformation"
+    implementation libs.picasso
+    implementation libs.picasso.transformations
 
-    implementation "androidx.recyclerview:recyclerview:$rootProject.recyclerViewVersion"
+    implementation libs.recyclerview
 
     // Groupie
-    implementation "com.github.lisawray.groupie:groupie:$rootProject.groupieVersion"
-    implementation "com.github.lisawray.groupie:groupie-viewbinding:$rootProject.groupieVersion"
+    implementation libs.groupie
+    implementation libs.groupie.viewbinding
 
-    implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
+    //Logging
+    implementation libs.timber
+
+    //Network
+    implementation libs.retrofit
+    implementation libs.logging.interceptor
+
+    //Serialization
+    implementation libs.kotlinx.serialization.json
+    implementation libs.retrofit2.kotlinx.serialization.converter
 }

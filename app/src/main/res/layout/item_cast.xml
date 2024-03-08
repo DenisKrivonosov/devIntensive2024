@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/material_margin_super_small"
+    android:layout_marginEnd="@dimen/material_margin_super_small"
+    android:layout_marginBottom="@dimen/material_margin_normal"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:background="@color/blueDark"
+    tools:ignore="RtlHardcoded">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/actorAvatar"
+        android:layout_width="@dimen/movie_cast_avatar_width"
+        android:layout_height="@dimen/movie_cast_avatar_height"
+        android:layout_marginStart="@dimen/material_margin_normal"
+        android:layout_marginEnd="@dimen/material_margin_normal"
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
+        tools:src="@drawable/ic_avatar" />
+
+    <TextView
+        android:id="@+id/actorName"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/material_margin_super_small"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:maxLines="2"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        tools:text="Владимир Епифанцев" />
+
+</LinearLayout>

@@ -26,4 +26,7 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="placeholder">Пёс Киноман</string>
+
+    //movie details
+    <string name="movie_details_header_content_description">Постер фильма</string>
 </resources>
