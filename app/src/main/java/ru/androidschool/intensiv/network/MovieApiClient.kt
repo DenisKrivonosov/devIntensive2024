@@ -15,7 +15,7 @@ object MovieApiClient {
 
     private var client: OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(HttpLoggingInterceptor().apply {
-            if (BuildConfig.BUILD_TYPE != "release") {
+            if (BuildConfig.DEBUG) {
                 this.level = HttpLoggingInterceptor.Level.BODY
             } else {
                 this.level = HttpLoggingInterceptor.Level.NONE

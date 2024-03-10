@@ -13,17 +13,13 @@ import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import io.reactivex.Observer
-import io.reactivex.SingleObserver
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.disposables.CompositeDisposable
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.MovieDbRepository
 import ru.androidschool.intensiv.data.model.movies.Movie
-import ru.androidschool.intensiv.data.model.movies.MoviesResponse
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
+import ru.androidschool.intensiv.ext.applySchedulers
 import ru.androidschool.intensiv.ui.movie_details.MovieDetailsFragment.Companion.KEY_MOVIE_ID
 import timber.log.Timber
 
@@ -31,6 +27,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
 
     private val binding: FeedFragmentBinding by viewBinding(CreateMethod.INFLATE)
     private val searchBinding by viewBinding(FeedHeaderBinding::bind)
+    private val compositeDisposable = CompositeDisposable()
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
@@ -56,98 +53,73 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        searchBinding.searchToolbar.onTextChanged()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        val searchBarDisposable = searchBinding.searchToolbar.onTextChanged()
+            .applySchedulers()
             .subscribe(
-                object : Observer<String> {
-                    override fun onSubscribe(d: Disposable) {
-                        Timber.d(TAG, "subscribed on searchBarObservable")
-                    }
+                { newText ->
+                    Timber.d(TAG, "onNext on searchBindingObservable")
+                    openSearch(newText)
+                },
 
-                    override fun onNext(newText: String) {
-                        Timber.d(TAG, "onNext on searchBindingObservable")
-                        openSearch(newText)
-                    }
+                { error ->
+                    Timber.d(TAG, "onError on searchBindingObservable")
+                    // Log error here since request failed
+                    Timber.e(TAG, error.toString())
+                }
 
-                    override fun onError(e: Throwable) {
-                        Timber.d(TAG, "onError on searchBindingObservable")
-                        // Log error here since request failed
-                        Timber.e(TAG, e.toString())
-                    }
+            )
 
-                    override fun onComplete() {
-                        Timber.d(TAG, "onComplete on searchBindingObservable")
+        val nowPlayingMoviesSource = MovieDbRepository.getNowPlayingMovies(language = "ru")
+        val upcomingMoviesSource = MovieDbRepository.getUpcomingMovies(language = "ru")
+        val getPopularMoviesSource = MovieDbRepository.getPopularMovies(language = "ru")
+
+        val nowPlayingMoviesSourceDisposable = nowPlayingMoviesSource
+            .applySchedulers()
+            .subscribe(
+                { response ->
+                    val moviesList = response.results.map {
+                        MovieItem(it) { movie -> openMovieDetails(movie) }
                     }
+                    binding.moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
+                },
+                { error ->
+                    // Log error here since request failed
+                    Timber.e(TAG, error.toString())
+                }
+
+            )
+
+        val upcomingMoviesSourceDisposable = upcomingMoviesSource
+            .applySchedulers()
+            .subscribe(
+                { response ->
+                    Timber.d(TAG, response.results.toString())
+                },
+                { error ->
+                    // Log error here since request failed
+                    Timber.e(TAG, error.toString())
+                }
+
+            )
+
+        val getPopularMoviesSourceDisposable = getPopularMoviesSource
+            .applySchedulers()
+            .subscribe(
+                { response ->
+                    Timber.d(TAG, response.results.toString())
+                },
+                { error ->
+                    // Log error here since request failed
+                    Timber.e(TAG, error.toString())
                 }
             )
 
-        val nowPlayingMoviesObservable = MovieDbRepository.getNowPlayingMovies(language = "ru")
-        val upcomingMoviesObservable = MovieDbRepository.getUpcomingMovies(language = "ru")
-        val getPopularMoviesObservable = MovieDbRepository.getPopularMovies(language = "ru")
-
-        nowPlayingMoviesObservable
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                object : SingleObserver<MoviesResponse> {
-                    override fun onSubscribe(d: Disposable) {
-                        Timber.d(TAG, "subscribed on nowPlayingMoviesObservable")
-                    }
-
-                    override fun onError(e: Throwable) {
-                        // Log error here since request failed
-                        Timber.e(TAG, e.toString())
-                    }
-
-                    override fun onSuccess(response: MoviesResponse) {
-                        val moviesList = response.results.map {
-                            MovieItem(it) { movie -> openMovieDetails(movie) }
-                        }
-                        binding.moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
-                    }
-                }
-            )
-
-        upcomingMoviesObservable
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                object : SingleObserver<MoviesResponse> {
-                    override fun onSubscribe(d: Disposable) {
-                        Timber.d(TAG, "subscribed on upcomingMoviesObservable")
-                    }
-
-                    override fun onError(e: Throwable) {
-                        // Log error here since request failed
-                        Timber.e(TAG, e.toString())
-                    }
-
-                    override fun onSuccess(response: MoviesResponse) {
-                        Timber.d(TAG, response.results.toString())
-                    }
-                }
-            )
-
-        getPopularMoviesObservable
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                object : SingleObserver<MoviesResponse> {
-                    override fun onSubscribe(d: Disposable) {
-                        Timber.d(TAG, "subscribed on getPopularMoviesObservable")
-                    }
-
-                    override fun onError(e: Throwable) {
-                        // Log error here since request failed
-                        Timber.e(TAG, e.toString())
-                    }
-
-                    override fun onSuccess(response: MoviesResponse) {
-                        Timber.d(TAG, response.results.toString())
-                    }
-                }
-            )
+        compositeDisposable.addAll(
+            searchBarDisposable,
+            nowPlayingMoviesSourceDisposable,
+            upcomingMoviesSourceDisposable,
+            getPopularMoviesSourceDisposable
+        )
     }
 
     private fun openMovieDetails(movie: Movie) {
@@ -163,8 +135,9 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     }
 
     override fun onStop() {
-        super.onStop()
+        compositeDisposable.clear()
         searchBinding.searchToolbar.clear()
+        super.onStop()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

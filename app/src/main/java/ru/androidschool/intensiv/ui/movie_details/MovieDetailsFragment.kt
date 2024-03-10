@@ -10,20 +10,17 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import io.reactivex.SingleObserver
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.disposables.CompositeDisposable
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.MovieDbRepository
-import ru.androidschool.intensiv.data.model.movies.MovieCreditsResponse
-import ru.androidschool.intensiv.data.model.movies.MovieDetails
 import ru.androidschool.intensiv.databinding.MovieDetailsFragmentBinding
+import ru.androidschool.intensiv.ext.applySchedulers
 import timber.log.Timber
 
 class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
 
     private val binding: MovieDetailsFragmentBinding by viewBinding(CreateMethod.INFLATE)
+    private val compositeDisposable = CompositeDisposable()
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
@@ -42,62 +39,53 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
 
         val movieId = this.arguments?.getInt(KEY_MOVIE_ID, 1) ?: 1
 
-        val movieDetailsObservable = MovieDbRepository.getMovieDetails(
+        val movieDetailsSource = MovieDbRepository.getMovieDetails(
             movieId = movieId,
             language = "ru"
         )
 
-        val movieCreditsObservable = MovieDbRepository.getMovieCredits(
+        val movieCreditsSource = MovieDbRepository.getMovieCredits(
             movieId = movieId,
             language = "ru"
         )
 
-        movieDetailsObservable
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        val movieDetailsSourceDisposable = movieDetailsSource
+            .applySchedulers()
             .subscribe(
-                object : SingleObserver<MovieDetails> {
-                    override fun onSubscribe(d: Disposable) {
-                        Timber.d(TAG, "subscribed on movieDetailsObservable")
-                    }
+                { moviesDetails ->
+                    Picasso.get()
+                        .load(moviesDetails.posterPath)
+                        .into(binding.posterImageView)
 
-                    override fun onError(e: Throwable) {
-                        // Log error here since request failed
-                        Timber.e(TAG, e.toString())
-                    }
-
-                    override fun onSuccess(moviesDetails: MovieDetails) {
-                        Picasso.get()
-                            .load(moviesDetails.posterPath)
-                            .into(binding.posterImageView)
-
-                        binding.movieTitle.text = moviesDetails.title
-                        binding.movieRating.rating = moviesDetails.rating
-                        binding.movieOverview.text = moviesDetails.overview
-                    }
+                    binding.movieTitle.text = moviesDetails.title
+                    binding.movieRating.rating = moviesDetails.rating
+                    binding.movieOverview.text = moviesDetails.overview
+                },
+                { error ->
+                    // Log error here since request failed
+                    Timber.e(TAG, error.toString())
                 }
             )
 
-        movieCreditsObservable
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        val movieCreditsSourceDisposable = movieCreditsSource
+            .applySchedulers()
             .subscribe(
-                object : SingleObserver<MovieCreditsResponse> {
-                    override fun onSubscribe(d: Disposable) {
-                        Timber.d(TAG, "subscribed on nowPlayingMoviesObservable")
-                    }
-
-                    override fun onError(e: Throwable) {
-                        // Log error here since request failed
-                        Timber.e(TAG, e.toString())
-                    }
-
-                    override fun onSuccess(movieCredits: MovieCreditsResponse) {
-                        val castList = movieCredits.cast.map { CastItem(it) }
-                        binding.movieCastRecycler.adapter = adapter.apply { addAll(castList) }
-                    }
+                { movieCredits ->
+                    val castList = movieCredits.cast.map { CastItem(it) }
+                    binding.movieCastRecycler.adapter = adapter.apply { addAll(castList) }
+                },
+                { error ->
+                    // Log error here since request failed
+                    Timber.e(TAG, error.toString())
                 }
             )
+
+        compositeDisposable.addAll(movieDetailsSourceDisposable, movieCreditsSourceDisposable)
+    }
+
+    override fun onStop() {
+        compositeDisposable.clear()
+        super.onStop()
     }
 
     companion object {
