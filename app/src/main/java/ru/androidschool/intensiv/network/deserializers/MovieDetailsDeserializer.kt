@@ -11,6 +11,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.decodeFromJsonElement
+import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.data.model.common.Genre
 import ru.androidschool.intensiv.data.model.common.SpokenLanguage
 import ru.androidschool.intensiv.data.model.movies.MovieDetails
@@ -20,14 +21,14 @@ import ru.androidschool.intensiv.data.model.production.ProductionCountry
 import ru.androidschool.intensiv.network.BigDecimalNumericSerializer
 import java.math.BigDecimal
 
-private const val POSTER_PATH_PREFIX = "https://image.tmdb.org/t/p/w440_and_h660_face/"
-
 internal object MovieDetailsDeserializer : KSerializer<MovieDetails> {
 
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Movie")
 
     override fun serialize(encoder: Encoder, value: MovieDetails) {
-        throw UnsupportedOperationException("Serialization of NotActivatedLoan is not supported")
+        throw UnsupportedOperationException(
+            "Serialization of MovieDetailsDeserializer is not supported"
+        )
     }
 
     override fun deserialize(decoder: Decoder): MovieDetails {
@@ -37,7 +38,7 @@ internal object MovieDetailsDeserializer : KSerializer<MovieDetails> {
 
         return MovieDetails(
             adult = remote.adult,
-            backdropPath = "${POSTER_PATH_PREFIX}${remote.backdropPath}",
+            backdropPath = "${BuildConfig.POSTER_PATH_PREFIX}${remote.backdropPath}",
             belongsToCollection = remote.belongsToCollection,
             genreIds = remote.genreIds,
             homepage = remote.homepage,
@@ -47,7 +48,7 @@ internal object MovieDetailsDeserializer : KSerializer<MovieDetails> {
             originalTitle = remote.originalTitle,
             overview = remote.overview,
             popularity = remote.popularity,
-            posterPath = "${POSTER_PATH_PREFIX}${remote.posterPath}",
+            posterPath = "${BuildConfig.POSTER_PATH_PREFIX}${remote.posterPath}",
             productionCompanies = remote.productionCompanies,
             productionCountries = remote.productionCountries,
             releaseDate = remote.releaseDate,

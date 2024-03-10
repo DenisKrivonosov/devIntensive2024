@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.ui
+package ru.androidschool.intensiv.ui.search_bar
 
 import android.content.Context
 import android.util.AttributeSet
@@ -7,8 +7,14 @@ import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
+import io.reactivex.Observable
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.databinding.SearchToolbarBinding
+import ru.androidschool.intensiv.ui.afterTextChanged
+import java.util.concurrent.TimeUnit
+
+private const val EDIT_TEXT_DEBOUNCE = 300L
+private const val EDIT_TEXT_MIN_LENGTH = 3
 
 class SearchBar @JvmOverloads constructor(
     context: Context,
@@ -16,7 +22,7 @@ class SearchBar @JvmOverloads constructor(
     defStyle: Int = 0
 ) : FrameLayout(context, attrs, defStyle) {
 
-    val binding: SearchToolbarBinding by viewBinding(CreateMethod.INFLATE)
+    private val binding: SearchToolbarBinding by viewBinding(CreateMethod.INFLATE)
 
     private var hint: String = ""
     private var isCancelVisible: Boolean = true
@@ -39,22 +45,37 @@ class SearchBar @JvmOverloads constructor(
         binding.searchEditText.setText("")
     }
 
+    fun onTextChanged(): Observable<String> {
+        return Observable.create { emitter ->
+            binding.searchEditText.afterTextChanged { text ->
+                emitter.onNext(text.toString())
+            }
+        }
+            .debounce(EDIT_TEXT_DEBOUNCE, TimeUnit.MILLISECONDS)
+            .map { it.trim() }
+            .filter { it.length > EDIT_TEXT_MIN_LENGTH }
+            .distinctUntilChanged()
+    }
+
+
     override fun onFinishInflate() {
         super.onFinishInflate()
-        binding.searchEditText.hint = hint
-        binding.deleteTextButton.setOnClickListener {
-            binding.searchEditText.text.clear()
+        with(binding) {
+            searchEditText.hint = hint
+            deleteTextButton.setOnClickListener { searchEditText.text.clear() }
         }
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        binding.searchEditText.afterTextChanged { text ->
-            if (!text.isNullOrEmpty() && !binding.deleteTextButton.isVisible) {
-                binding.deleteTextButton.visibility = View.VISIBLE
-            }
-            if (text.isNullOrEmpty() && binding.deleteTextButton.isVisible) {
-                binding.deleteTextButton.visibility = View.GONE
+        with(binding) {
+            searchEditText.afterTextChanged { text ->
+                if (!text.isNullOrEmpty() && !deleteTextButton.isVisible) {
+                    deleteTextButton.visibility = View.VISIBLE
+                }
+                if (text.isNullOrEmpty() && deleteTextButton.isVisible) {
+                    deleteTextButton.visibility = View.GONE
+                }
             }
         }
     }

@@ -11,18 +11,17 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.decodeFromJsonElement
+import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.data.model.movies.Movie
 import ru.androidschool.intensiv.network.BigDecimalNumericSerializer
 import java.math.BigDecimal
-
-private const val POSTER_PATH_PREFIX = "https://image.tmdb.org/t/p/w440_and_h660_face/"
 
 internal object MovieDeserializer : KSerializer<Movie> {
 
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Movie")
 
     override fun serialize(encoder: Encoder, value: Movie) {
-        throw UnsupportedOperationException("Serialization of NotActivatedLoan is not supported")
+        throw UnsupportedOperationException("Serialization of MovieDeserializer is not supported")
     }
 
     override fun deserialize(decoder: Decoder): Movie {
@@ -33,13 +32,13 @@ internal object MovieDeserializer : KSerializer<Movie> {
         return Movie(
             id = remote.id,
             adult = remote.adult,
-            backdropPath = "${POSTER_PATH_PREFIX}${remote.backdropPath}",
+            backdropPath = "${BuildConfig.POSTER_PATH_PREFIX}${remote.backdropPath}",
             genreIds = remote.genreIds,
             originalLanguage = remote.originalLanguage,
             originalTitle = remote.originalTitle,
             overview = remote.overview,
             popularity = remote.popularity,
-            posterPath = "$POSTER_PATH_PREFIX${remote.posterPath}",
+            posterPath = "${BuildConfig.POSTER_PATH_PREFIX}${remote.posterPath}",
             releaseDate = remote.releaseDate,
             title = remote.title,
             video = remote.video,

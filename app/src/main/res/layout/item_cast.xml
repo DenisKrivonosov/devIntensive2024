@@ -15,8 +15,8 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/actorAvatar"
-        android:layout_width="@dimen/movie_cast_avatar_width"
-        android:layout_height="@dimen/movie_cast_avatar_height"
+        android:layout_width="@dimen/movie_cast_size"
+        android:layout_height="@dimen/movie_cast_size"
         android:layout_marginStart="@dimen/material_margin_normal"
         android:layout_marginEnd="@dimen/material_margin_normal"
         android:scaleType="centerCrop"

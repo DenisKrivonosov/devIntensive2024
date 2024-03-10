@@ -13,16 +13,17 @@ import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import io.reactivex.Observer
+import io.reactivex.SingleObserver
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.MovieDbRepository
 import ru.androidschool.intensiv.data.model.movies.Movie
 import ru.androidschool.intensiv.data.model.movies.MoviesResponse
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
-import ru.androidschool.intensiv.ui.afterTextChanged
 import ru.androidschool.intensiv.ui.movie_details.MovieDetailsFragment.Companion.KEY_MOVIE_ID
 import timber.log.Timber
 
@@ -55,64 +56,98 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        searchBinding.searchToolbar.binding.searchEditText.afterTextChanged {
-            Timber.d(it.toString())
-            if (it.toString().length > MIN_LENGTH) {
-                openSearch(it.toString())
-            }
-        }
+        searchBinding.searchToolbar.onTextChanged()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                object : Observer<String> {
+                    override fun onSubscribe(d: Disposable) {
+                        Timber.d(TAG, "subscribed on searchBarObservable")
+                    }
 
-        val nowPlayingMoviesCall = MovieDbRepository.getNowPlayingMovies(page = 1, language = "ru")
-        val upcomingMoviesCall = MovieDbRepository.getUpcomingMovies(page = 1, language = "ru")
-        val getPopularMoviesCall = MovieDbRepository.getPopularMovies(page = 1, language = "ru")
+                    override fun onNext(newText: String) {
+                        Timber.d(TAG, "onNext on searchBindingObservable")
+                        openSearch(newText)
+                    }
 
-        nowPlayingMoviesCall.enqueue(object : Callback<MoviesResponse> {
-            override fun onResponse(
-                call: Call<MoviesResponse>,
-                response: Response<MoviesResponse>
-            ) {
-                val moviesList = response.body()!!.results.map {
-                    MovieItem(it) { movie -> openMovieDetails(movie) }
+                    override fun onError(e: Throwable) {
+                        Timber.d(TAG, "onError on searchBindingObservable")
+                        // Log error here since request failed
+                        Timber.e(TAG, e.toString())
+                    }
+
+                    override fun onComplete() {
+                        Timber.d(TAG, "onComplete on searchBindingObservable")
+                    }
                 }
-                binding.moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
+            )
 
-            }
+        val nowPlayingMoviesObservable = MovieDbRepository.getNowPlayingMovies(language = "ru")
+        val upcomingMoviesObservable = MovieDbRepository.getUpcomingMovies(language = "ru")
+        val getPopularMoviesObservable = MovieDbRepository.getPopularMovies(language = "ru")
 
-            override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
-                // Log error here since request failed
-                Timber.e(TAG, t.toString())
-            }
-        })
+        nowPlayingMoviesObservable
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                object : SingleObserver<MoviesResponse> {
+                    override fun onSubscribe(d: Disposable) {
+                        Timber.d(TAG, "subscribed on nowPlayingMoviesObservable")
+                    }
 
-        upcomingMoviesCall.enqueue(object : Callback<MoviesResponse> {
-            override fun onResponse(
-                call: Call<MoviesResponse>,
-                response: Response<MoviesResponse>
-            ) {
-                val moviesList = response.body()
-                Timber.d(TAG, moviesList.toString())
-            }
+                    override fun onError(e: Throwable) {
+                        // Log error here since request failed
+                        Timber.e(TAG, e.toString())
+                    }
 
-            override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
-                // Log error here since request failed
-                Timber.e(TAG, t.toString())
-            }
-        })
+                    override fun onSuccess(response: MoviesResponse) {
+                        val moviesList = response.results.map {
+                            MovieItem(it) { movie -> openMovieDetails(movie) }
+                        }
+                        binding.moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
+                    }
+                }
+            )
 
-        getPopularMoviesCall.enqueue(object : Callback<MoviesResponse> {
-            override fun onResponse(
-                call: Call<MoviesResponse>,
-                response: Response<MoviesResponse>
-            ) {
-                val moviesList = response.body()
-                Timber.d(TAG, moviesList.toString())
-            }
+        upcomingMoviesObservable
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                object : SingleObserver<MoviesResponse> {
+                    override fun onSubscribe(d: Disposable) {
+                        Timber.d(TAG, "subscribed on upcomingMoviesObservable")
+                    }
 
-            override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
-                // Log error here since request failed
-                Timber.e(TAG, t.toString())
-            }
-        })
+                    override fun onError(e: Throwable) {
+                        // Log error here since request failed
+                        Timber.e(TAG, e.toString())
+                    }
+
+                    override fun onSuccess(response: MoviesResponse) {
+                        Timber.d(TAG, response.results.toString())
+                    }
+                }
+            )
+
+        getPopularMoviesObservable
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                object : SingleObserver<MoviesResponse> {
+                    override fun onSubscribe(d: Disposable) {
+                        Timber.d(TAG, "subscribed on getPopularMoviesObservable")
+                    }
+
+                    override fun onError(e: Throwable) {
+                        // Log error here since request failed
+                        Timber.e(TAG, e.toString())
+                    }
+
+                    override fun onSuccess(response: MoviesResponse) {
+                        Timber.d(TAG, response.results.toString())
+                    }
+                }
+            )
     }
 
     private fun openMovieDetails(movie: Movie) {
@@ -138,7 +173,6 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
 
     companion object {
         private val TAG = FeedFragment::class.java.simpleName
-        const val MIN_LENGTH = 3
         const val KEY_SEARCH = "search"
     }
 }

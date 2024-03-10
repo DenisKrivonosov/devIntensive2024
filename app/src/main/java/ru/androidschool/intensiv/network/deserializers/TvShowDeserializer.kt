@@ -11,18 +11,17 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.decodeFromJsonElement
+import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.data.model.tv_series.TvShow
 import ru.androidschool.intensiv.network.BigDecimalNumericSerializer
 import java.math.BigDecimal
-
-private const val POSTER_PATH_PREFIX = "https://image.tmdb.org/t/p/w440_and_h660_face/"
 
 internal object TvShowDeserializer : KSerializer<TvShow> {
 
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("TvSerial")
 
     override fun serialize(encoder: Encoder, value: TvShow) {
-        throw UnsupportedOperationException("Serialization of NotActivatedLoan is not supported")
+        throw UnsupportedOperationException("Serialization of TvShow is not supported")
     }
 
     override fun deserialize(decoder: Decoder): TvShow {
@@ -33,20 +32,16 @@ internal object TvShowDeserializer : KSerializer<TvShow> {
         return TvShow(
             id = remote.id,
             adult = remote.adult,
-            backdropPath = if (remote.backdropPath != null) {
-                "${POSTER_PATH_PREFIX}${remote.backdropPath}"
-            } else {
-                null
+            backdropPath = remote.backdropPath?.let {
+                "${BuildConfig.POSTER_PATH_PREFIX}${remote.backdropPath}"
             },
             genreIds = remote.genreIds,
             originalLanguage = remote.originalLanguage,
             originalName = remote.originalName,
             overview = remote.overview,
             popularity = remote.popularity,
-            posterPath = if (remote.posterPath != null) {
-                "${POSTER_PATH_PREFIX}${remote.posterPath}"
-            } else {
-                null
+            posterPath = remote.posterPath?.let {
+                "${BuildConfig.POSTER_PATH_PREFIX}${remote.posterPath}"
             },
             firstAirDate = remote.firstAirDate,
             originalCountry = remote.originalCountry,
