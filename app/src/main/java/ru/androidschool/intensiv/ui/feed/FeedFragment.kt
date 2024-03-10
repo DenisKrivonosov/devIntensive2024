@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
@@ -14,6 +15,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.Singles
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.MovieDbRepository
 import ru.androidschool.intensiv.data.model.movies.Movie
@@ -73,11 +75,24 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         val upcomingMoviesSource = MovieDbRepository.getUpcomingMovies(language = "ru")
         val getPopularMoviesSource = MovieDbRepository.getPopularMovies(language = "ru")
 
-        val nowPlayingMoviesSourceDisposable = nowPlayingMoviesSource
+        val allMoviesDisposable = Singles.zip(
+            nowPlayingMoviesSource,
+            upcomingMoviesSource,
+            getPopularMoviesSource
+        ) { nowPlayingMovies, upcomingMovies, popularMovies ->
+            nowPlayingMovies.results + upcomingMovies.results + popularMovies.results
+
+        }
             .applySchedulers()
+            .doOnSubscribe {
+                showLoaderView()
+            }
+            .doFinally {
+                showMoviesView()
+            }
             .subscribe(
                 { response ->
-                    val moviesList = response.results.map {
+                    val moviesList = response.map {
                         MovieItem(it) { movie -> openMovieDetails(movie) }
                     }
                     binding.moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
@@ -89,36 +104,9 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
 
             )
 
-        val upcomingMoviesSourceDisposable = upcomingMoviesSource
-            .applySchedulers()
-            .subscribe(
-                { response ->
-                    Timber.d(TAG, response.results.toString())
-                },
-                { error ->
-                    // Log error here since request failed
-                    Timber.e(TAG, error.toString())
-                }
-
-            )
-
-        val getPopularMoviesSourceDisposable = getPopularMoviesSource
-            .applySchedulers()
-            .subscribe(
-                { response ->
-                    Timber.d(TAG, response.results.toString())
-                },
-                { error ->
-                    // Log error here since request failed
-                    Timber.e(TAG, error.toString())
-                }
-            )
-
         compositeDisposable.addAll(
             searchBarDisposable,
-            nowPlayingMoviesSourceDisposable,
-            upcomingMoviesSourceDisposable,
-            getPopularMoviesSourceDisposable
+            allMoviesDisposable
         )
     }
 
@@ -126,6 +114,16 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         val bundle = Bundle()
         bundle.putInt(KEY_MOVIE_ID, movie.id)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)
+    }
+
+    private fun showMoviesView() {
+        binding.loaderView.isVisible = false
+        binding.moviesRecyclerView.isVisible = true
+    }
+
+    private fun showLoaderView() {
+        binding.loaderView.isVisible = true
+        binding.moviesRecyclerView.isVisible = false
     }
 
     private fun openSearch(searchText: String) {
