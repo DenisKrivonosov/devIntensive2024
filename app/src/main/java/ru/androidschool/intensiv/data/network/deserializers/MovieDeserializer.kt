@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.network.deserializers
+package ru.androidschool.intensiv.data.network.deserializers
 
 import androidx.annotation.Keep
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -13,7 +13,7 @@ import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.decodeFromJsonElement
 import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.data.model.movies.Movie
-import ru.androidschool.intensiv.network.BigDecimalNumericSerializer
+import ru.androidschool.intensiv.data.network.BigDecimalNumericSerializer
 import java.math.BigDecimal
 
 internal object MovieDeserializer : KSerializer<Movie> {

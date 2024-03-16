@@ -8,8 +8,8 @@ import ru.androidschool.intensiv.data.model.common.Genre
 import ru.androidschool.intensiv.data.model.common.SpokenLanguage
 import ru.androidschool.intensiv.data.model.production.ProductionCompany
 import ru.androidschool.intensiv.data.model.production.ProductionCountry
-import ru.androidschool.intensiv.network.BigDecimalNumericSerializer
-import ru.androidschool.intensiv.network.deserializers.MovieDetailsDeserializer
+import ru.androidschool.intensiv.data.network.BigDecimalNumericSerializer
+import ru.androidschool.intensiv.data.network.deserializers.MovieDetailsDeserializer
 import java.math.BigDecimal
 
 private const val RATING_TO_STARS_RATIO = 2

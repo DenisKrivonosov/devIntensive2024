@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.network
+package ru.androidschool.intensiv.data.network
 
 import androidx.annotation.IntRange
 import io.reactivex.Single

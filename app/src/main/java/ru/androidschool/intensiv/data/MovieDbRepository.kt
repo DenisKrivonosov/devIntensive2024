@@ -6,7 +6,7 @@ import ru.androidschool.intensiv.data.model.movies.MovieCreditsResponse
 import ru.androidschool.intensiv.data.model.movies.MovieDetails
 import ru.androidschool.intensiv.data.model.movies.MoviesResponse
 import ru.androidschool.intensiv.data.model.tv_series.TvShowsResponse
-import ru.androidschool.intensiv.network.MovieApiClient
+import ru.androidschool.intensiv.data.network.MovieApiClient
 
 object MovieDbRepository {
 

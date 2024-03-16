@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.network
+package ru.androidschool.intensiv.data.network
 
 import okhttp3.Interceptor
 import okhttp3.Response

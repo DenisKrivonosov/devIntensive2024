@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.network.deserializers
+package ru.androidschool.intensiv.data.network.deserializers
 
 import androidx.annotation.Keep
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -18,7 +18,7 @@ import ru.androidschool.intensiv.data.model.movies.MovieDetails
 import ru.androidschool.intensiv.data.model.movies.MoviesCollection
 import ru.androidschool.intensiv.data.model.production.ProductionCompany
 import ru.androidschool.intensiv.data.model.production.ProductionCountry
-import ru.androidschool.intensiv.network.BigDecimalNumericSerializer
+import ru.androidschool.intensiv.data.network.BigDecimalNumericSerializer
 import java.math.BigDecimal
 
 internal object MovieDetailsDeserializer : KSerializer<MovieDetails> {

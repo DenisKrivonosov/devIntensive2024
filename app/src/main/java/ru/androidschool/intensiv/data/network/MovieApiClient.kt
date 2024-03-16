@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.network
+package ru.androidschool.intensiv.data.network
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import okhttp3.MediaType.Companion.toMediaType
@@ -7,7 +7,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import ru.androidschool.intensiv.BuildConfig
-import ru.androidschool.intensiv.network.KotlinXJsonFactory.createJson
+import ru.androidschool.intensiv.data.network.KotlinXJsonFactory.createJson
 
 object MovieApiClient {
 
