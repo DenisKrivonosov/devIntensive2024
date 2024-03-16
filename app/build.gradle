@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
     alias(libs.plugins.kotlinxSerialization)
 }
 
@@ -111,4 +112,11 @@ dependencies {
     //Serialization
     implementation libs.kotlinx.serialization.json
     implementation libs.retrofit2.kotlinx.serialization.converter
+
+    //Room
+    implementation libs.room.runtime
+    implementation libs.room.ktx
+    kapt libs.room.compiler
+    androidTestImplementation libs.room.testing
+    implementation libs.room.rxjava2
 }
