@@ -103,6 +103,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
                             popularMovies.orEmpty() +
                             upcomingMovies.orEmpty()
                     binding.moviesRecyclerView.adapter = adapter.apply {
+                        clear()
                         addAll(allMovies)
                     }
                 },

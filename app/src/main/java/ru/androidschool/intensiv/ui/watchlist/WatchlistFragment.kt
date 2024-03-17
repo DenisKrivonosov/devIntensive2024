@@ -66,7 +66,10 @@ class WatchlistFragment : Fragment() {
                             )
                         }
                     }
-                    binding.moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
+                    binding.moviesRecyclerView.adapter = adapter.apply {
+                        clear()
+                        addAll(moviesList)
+                    }
                 },
                 { error ->
                     // Log error here since request failed

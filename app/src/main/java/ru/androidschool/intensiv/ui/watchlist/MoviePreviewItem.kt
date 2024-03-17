@@ -1,11 +1,11 @@
 package ru.androidschool.intensiv.ui.watchlist
 
 import android.view.View
-import com.squareup.picasso.Picasso
 import com.xwray.groupie.viewbinding.BindableItem
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.model.movies.Movie
 import ru.androidschool.intensiv.databinding.ItemSmallBinding
+import ru.androidschool.intensiv.ext.loadImage
 
 class MoviePreviewItem(
     private val content: Movie,
@@ -15,12 +15,13 @@ class MoviePreviewItem(
     override fun getLayout() = R.layout.item_small
 
     override fun bind(view: ItemSmallBinding, position: Int) {
-        view.imagePreview.setOnClickListener {
-            onClick.invoke(content)
+        with(view.imagePreview) {
+            loadImage(content.posterPath)
+            setOnClickListener {
+                onClick.invoke(content)
+            }
         }
-        Picasso.get()
-            .load(content.posterPath)
-            .into(view.imagePreview)
+
     }
 
     override fun initializeViewBinding(v: View): ItemSmallBinding = ItemSmallBinding.bind(v)

@@ -18,6 +18,7 @@ import ru.androidschool.intensiv.data.model.movies.CompositeMovieDetails
 import ru.androidschool.intensiv.data.repository.MovieDbRepository
 import ru.androidschool.intensiv.databinding.MovieDetailsFragmentBinding
 import ru.androidschool.intensiv.ext.applySchedulers
+import ru.androidschool.intensiv.ext.loadImage
 import timber.log.Timber
 
 class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
@@ -71,10 +72,7 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
             .subscribe(
                 { compositeMovieDetails ->
                     with(compositeMovieDetails.movieDetails) {
-                        Picasso.get()
-                            .load(posterPath)
-                            .into(binding.posterImageView)
-
+                        binding.posterImageView.loadImage(posterPath)
                         binding.movieTitle.text = title
                         binding.movieRating.rating = rating
                         binding.movieOverview.text = overview
