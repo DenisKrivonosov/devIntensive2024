@@ -8,7 +8,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.disposables.CompositeDisposable

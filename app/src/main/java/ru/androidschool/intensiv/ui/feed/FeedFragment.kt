@@ -137,6 +137,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         super.onStop()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.main_menu, menu)
     }
