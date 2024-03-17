@@ -1,19 +1,19 @@
 package ru.androidschool.intensiv.data.model.movies
 
-import androidx.annotation.Keep
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.androidschool.intensiv.data.network.BigDecimalNumericSerializer
-import ru.androidschool.intensiv.data.network.deserializers.MovieDeserializer
 import java.math.BigDecimal
 
-@Keep
-@Serializable(with = MovieDeserializer::class)
-data class Movie @OptIn(ExperimentalSerializationApi::class) constructor(
-    val id: Int,
+private const val RATING_TO_STARS_RATIO = 2
+internal const val MOVIES_TABLE_NAME = "movies"
+
+@Entity(tableName = MOVIES_TABLE_NAME)
+data class MovieDto @OptIn(ExperimentalSerializationApi::class) constructor(
+    @PrimaryKey val id: Int,
 
     val adult: Boolean,
 
@@ -49,4 +49,9 @@ data class Movie @OptIn(ExperimentalSerializationApi::class) constructor(
 
     @SerialName("vote_count")
     val voteCount: String,
-)
+
+    val movieType: MovieType
+) {
+    val rating: Float
+        get() = voteAverage.div(BigDecimal(RATING_TO_STARS_RATIO)).toFloat()
+}

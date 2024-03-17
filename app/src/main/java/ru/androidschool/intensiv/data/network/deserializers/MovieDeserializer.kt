@@ -12,6 +12,7 @@ import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.decodeFromJsonElement
 import ru.androidschool.intensiv.BuildConfig
+import ru.androidschool.intensiv.data.model.movies.Genre
 import ru.androidschool.intensiv.data.model.movies.Movie
 import ru.androidschool.intensiv.data.network.BigDecimalNumericSerializer
 import java.math.BigDecimal
@@ -33,7 +34,7 @@ internal object MovieDeserializer : KSerializer<Movie> {
             id = remote.id,
             adult = remote.adult,
             backdropPath = "${BuildConfig.POSTER_PATH_PREFIX}${remote.backdropPath}",
-            genreIds = remote.genreIds,
+            genreIds = remote.genreIds.map { Genre(it) },
             originalLanguage = remote.originalLanguage,
             originalTitle = remote.originalTitle,
             overview = remote.overview,

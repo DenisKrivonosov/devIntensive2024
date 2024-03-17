@@ -4,5 +4,6 @@ import ru.androidschool.intensiv.data.model.common.CastMember
 
 data class CompositeMovieDetails(
     val movieDetails: MovieDetails,
-    val movieCast: List<CastMember>
+    val movieCast: List<CastMember>,
+    val isMovieLiked: Boolean
 )

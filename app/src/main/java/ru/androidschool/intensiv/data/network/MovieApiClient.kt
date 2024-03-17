@@ -24,7 +24,7 @@ object MovieApiClient {
         .addInterceptor(MovieDbApiKeyInterceptor())
         .build()
 
-    val apiClient: MovieApiInterface by lazy {
+    val apiClient: MovieApi by lazy {
         val contentType = APPLICATION_JSON_MIME_TYPE.toMediaType()
         val converterFactory = createJson().asConverterFactory(contentType)
         val retrofit = Retrofit.Builder()
@@ -34,6 +34,6 @@ object MovieApiClient {
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
 
-        return@lazy retrofit.create(MovieApiInterface::class.java)
+        return@lazy retrofit.create(MovieApi::class.java)
     }
 }

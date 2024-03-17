@@ -29,4 +29,6 @@
 
     //movie details
     <string name="movie_details_header_content_description">Постер фильма</string>
+    <string name="movie_details_header_like_description">Поставить нравится</string>
+
 </resources>
