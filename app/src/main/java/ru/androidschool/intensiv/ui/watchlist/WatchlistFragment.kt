@@ -12,15 +12,12 @@ import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import io.reactivex.SingleObserver
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.disposables.CompositeDisposable
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.MovieDbRepository
 import ru.androidschool.intensiv.data.model.movies.Movie
-import ru.androidschool.intensiv.data.model.movies.MoviesResponse
 import ru.androidschool.intensiv.databinding.FragmentWatchlistBinding
+import ru.androidschool.intensiv.ext.applySchedulers
 import ru.androidschool.intensiv.ui.feed.MovieItem
 import ru.androidschool.intensiv.ui.movie_details.MovieDetailsFragment.Companion.KEY_MOVIE_ID
 import timber.log.Timber
@@ -28,6 +25,8 @@ import timber.log.Timber
 class WatchlistFragment : Fragment() {
 
     private val binding: FragmentWatchlistBinding by viewBinding(CreateMethod.INFLATE)
+
+    private val compositeDisposable = CompositeDisposable()
 
     private val options = navOptions {
         anim {
@@ -54,34 +53,32 @@ class WatchlistFragment : Fragment() {
         binding.moviesRecyclerView.layoutManager = GridLayoutManager(context, 4)
         binding.moviesRecyclerView.adapter = adapter.apply { addAll(listOf()) }
 
-        val nowPlayingMoviesObservable = MovieDbRepository.getNowPlayingMovies(language = "ru")
+        val nowPlayingMoviesSource = MovieDbRepository.getNowPlayingMovies(language = "ru")
 
-        nowPlayingMoviesObservable
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        val nowPlayingMoviesSourceDisposable = nowPlayingMoviesSource
+            .applySchedulers()
             .subscribe(
-                object : SingleObserver<MoviesResponse> {
-                    override fun onSubscribe(d: Disposable) {
-                        Timber.d(TAG, "subscribed on getPopularMoviesObservable")
-                    }
-
-                    override fun onError(e: Throwable) {
-                        // Log error here since request failed
-                        Timber.e(TAG, e.toString())
-                    }
-
-                    override fun onSuccess(response: MoviesResponse) {
-                        val moviesList = response.results.map {
-                            MovieItem(it) { movie ->
-                                openMovieDetails(
-                                    movie
-                                )
-                            }
+                { response ->
+                    val moviesList = response.results.map {
+                        MovieItem(it) { movie ->
+                            openMovieDetails(
+                                movie
+                            )
                         }
-                        binding.moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
                     }
+                    binding.moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
+                },
+                { error ->
+                    // Log error here since request failed
+                    Timber.e(TAG, error.toString())
                 }
             )
+        compositeDisposable.add(nowPlayingMoviesSourceDisposable)
+    }
+
+    override fun onStop() {
+        compositeDisposable.clear()
+        super.onStop()
     }
 
     private fun openMovieDetails(movie: Movie) {

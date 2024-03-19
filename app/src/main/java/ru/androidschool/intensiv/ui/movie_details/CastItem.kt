@@ -4,10 +4,10 @@ import android.view.View
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.viewbinding.BindableItem
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.model.common.Cast
+import ru.androidschool.intensiv.data.model.common.CastMember
 import ru.androidschool.intensiv.databinding.ItemCastBinding
 
-class CastItem(private val content: Cast) : BindableItem<ItemCastBinding>() {
+class CastItem(private val content: CastMember) : BindableItem<ItemCastBinding>() {
 
     override fun getLayout(): Int = R.layout.item_cast
 

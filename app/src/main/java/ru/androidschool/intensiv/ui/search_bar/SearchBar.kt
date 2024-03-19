@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.databinding.SearchToolbarBinding
 import ru.androidschool.intensiv.ui.afterTextChanged
@@ -26,6 +27,8 @@ class SearchBar @JvmOverloads constructor(
 
     private var hint: String = ""
     private var isCancelVisible: Boolean = true
+
+    private val subject = PublishSubject.create<String>()
 
     init {
         if (attrs != null) {
@@ -46,11 +49,7 @@ class SearchBar @JvmOverloads constructor(
     }
 
     fun onTextChanged(): Observable<String> {
-        return Observable.create { emitter ->
-            binding.searchEditText.afterTextChanged { text ->
-                emitter.onNext(text.toString())
-            }
-        }
+        return subject
             .debounce(EDIT_TEXT_DEBOUNCE, TimeUnit.MILLISECONDS)
             .map { it.trim() }
             .filter { it.length > EDIT_TEXT_MIN_LENGTH }
@@ -70,6 +69,7 @@ class SearchBar @JvmOverloads constructor(
         super.onAttachedToWindow()
         with(binding) {
             searchEditText.afterTextChanged { text ->
+                subject.onNext(text.toString())
                 if (!text.isNullOrEmpty() && !deleteTextButton.isVisible) {
                     deleteTextButton.visibility = View.VISIBLE
                 }

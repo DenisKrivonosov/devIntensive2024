@@ -10,7 +10,7 @@ import java.math.BigDecimal
 
 @Keep
 @Serializable(with = CastDeserializer::class)
-data class Cast @OptIn(ExperimentalSerializationApi::class) constructor(
+data class CastMember @OptIn(ExperimentalSerializationApi::class) constructor(
 
     val adult: Boolean,
     val gender: Int,

@@ -12,24 +12,24 @@ import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.decodeFromJsonElement
 import ru.androidschool.intensiv.BuildConfig
-import ru.androidschool.intensiv.data.model.common.Cast
+import ru.androidschool.intensiv.data.model.common.CastMember
 import ru.androidschool.intensiv.network.BigDecimalNumericSerializer
 import java.math.BigDecimal
 
-internal object CastDeserializer : KSerializer<Cast> {
+internal object CastDeserializer : KSerializer<CastMember> {
 
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Movie")
 
-    override fun serialize(encoder: Encoder, value: Cast) {
+    override fun serialize(encoder: Encoder, value: CastMember) {
         throw UnsupportedOperationException("Serialization of Cast is not supported")
     }
 
-    override fun deserialize(decoder: Decoder): Cast {
+    override fun deserialize(decoder: Decoder): CastMember {
         require(decoder is JsonDecoder)
         val rootElement = decoder.decodeJsonElement()
         val remote = decoder.json.decodeFromJsonElement<RemoteCast>(rootElement)
 
-        return Cast(
+        return CastMember(
             adult = remote.adult,
             gender = remote.gender,
             id = remote.id,

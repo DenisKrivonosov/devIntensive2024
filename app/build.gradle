@@ -106,6 +106,7 @@ dependencies {
     //rx
     implementation libs.rxandroid
     implementation libs.rxjava
+    implementation(libs.rxkotlin)
 
     //Serialization
     implementation libs.kotlinx.serialization.json
