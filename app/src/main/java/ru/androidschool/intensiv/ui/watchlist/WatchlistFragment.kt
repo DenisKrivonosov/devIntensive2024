@@ -14,8 +14,8 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.disposables.CompositeDisposable
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.MovieDbRepository
-import ru.androidschool.intensiv.data.model.movies.Movie
+import ru.androidschool.intensiv.data.model.movies.MovieDto
+import ru.androidschool.intensiv.data.repository.MovieDbRepository
 import ru.androidschool.intensiv.databinding.FragmentWatchlistBinding
 import ru.androidschool.intensiv.ext.applySchedulers
 import ru.androidschool.intensiv.ui.feed.MovieItem
@@ -50,23 +50,26 @@ class WatchlistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.moviesRecyclerView.layoutManager = GridLayoutManager(context, 4)
+        binding.moviesRecyclerView.layoutManager = GridLayoutManager(context, 2)
         binding.moviesRecyclerView.adapter = adapter.apply { addAll(listOf()) }
 
-        val nowPlayingMoviesSource = MovieDbRepository.getNowPlayingMovies(language = "ru")
+        val nowPlayingMoviesSource = MovieDbRepository.observeLikedMovies()
 
         val nowPlayingMoviesSourceDisposable = nowPlayingMoviesSource
             .applySchedulers()
             .subscribe(
                 { response ->
-                    val moviesList = response.results.map {
+                    val moviesList = response.map {
                         MovieItem(it) { movie ->
                             openMovieDetails(
                                 movie
                             )
                         }
                     }
-                    binding.moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
+                    binding.moviesRecyclerView.adapter = adapter.apply {
+                        clear()
+                        addAll(moviesList)
+                    }
                 },
                 { error ->
                     // Log error here since request failed
@@ -81,7 +84,7 @@ class WatchlistFragment : Fragment() {
         super.onStop()
     }
 
-    private fun openMovieDetails(movie: Movie) {
+    private fun openMovieDetails(movie: MovieDto) {
         val bundle = Bundle()
         bundle.putInt(KEY_MOVIE_ID, movie.id)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)

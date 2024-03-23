@@ -11,7 +11,7 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.disposables.CompositeDisposable
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.MovieDbRepository
+import ru.androidschool.intensiv.data.repository.MovieDbRepository
 import ru.androidschool.intensiv.databinding.TvShowsFragmentBinding
 import ru.androidschool.intensiv.ext.applySchedulers
 import timber.log.Timber

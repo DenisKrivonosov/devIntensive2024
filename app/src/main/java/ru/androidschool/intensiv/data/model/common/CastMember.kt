@@ -4,8 +4,8 @@ import androidx.annotation.Keep
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.androidschool.intensiv.network.BigDecimalNumericSerializer
-import ru.androidschool.intensiv.network.deserializers.CastDeserializer
+import ru.androidschool.intensiv.data.network.BigDecimalNumericSerializer
+import ru.androidschool.intensiv.data.network.deserializers.CastDeserializer
 import java.math.BigDecimal
 
 @Keep

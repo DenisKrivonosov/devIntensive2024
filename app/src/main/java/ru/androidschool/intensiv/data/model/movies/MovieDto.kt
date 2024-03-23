@@ -1,38 +1,27 @@
 package ru.androidschool.intensiv.data.model.movies
 
-import androidx.annotation.Keep
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.androidschool.intensiv.data.model.common.Genre
-import ru.androidschool.intensiv.data.model.common.SpokenLanguage
-import ru.androidschool.intensiv.data.model.production.ProductionCompany
-import ru.androidschool.intensiv.data.model.production.ProductionCountry
 import ru.androidschool.intensiv.data.network.BigDecimalNumericSerializer
-import ru.androidschool.intensiv.data.network.deserializers.MovieDetailsDeserializer
 import java.math.BigDecimal
 
 private const val RATING_TO_STARS_RATIO = 2
+internal const val MOVIES_TABLE_NAME = "movies"
 
-@Keep
-@Serializable(with = MovieDetailsDeserializer::class)
-data class MovieDetails @OptIn(ExperimentalSerializationApi::class) constructor(
+@Entity(tableName = MOVIES_TABLE_NAME)
+data class MovieDto @OptIn(ExperimentalSerializationApi::class) constructor(
+    @PrimaryKey val id: Int,
+
     val adult: Boolean,
 
     @SerialName("backdrop_path")
     val backdropPath: String,
 
-    @SerialName("belongs_to_collection")
-    val belongsToCollection: MoviesCollection?,
-
     @SerialName("genre_ids")
-    val genreIds: List<Genre>?,
-
-    val homepage: String,
-    val id: Int,
-
-    @SerialName("imdb_id")
-    val imdbId: String,
+    val genreIds: List<Genre>,
 
     @SerialName("original_language")
     val originalLanguage: String,
@@ -48,23 +37,9 @@ data class MovieDetails @OptIn(ExperimentalSerializationApi::class) constructor(
     @SerialName("poster_path")
     val posterPath: String,
 
-    @SerialName("production_companies")
-    val productionCompanies: List<ProductionCompany>,
-
-    @SerialName("production_countries")
-    val productionCountries: List<ProductionCountry>,
-
     @SerialName("release_date")
     val releaseDate: String,
 
-    val revenue: Int,
-    val runtime: Int,
-
-    @SerialName("spoken_languages")
-    val spokenLanguages: List<SpokenLanguage>,
-
-    val status: String,
-    val tagline: String,
     val title: String,
     val video: Boolean,
 
@@ -73,7 +48,9 @@ data class MovieDetails @OptIn(ExperimentalSerializationApi::class) constructor(
     val voteAverage: BigDecimal,
 
     @SerialName("vote_count")
-    val voteCount: String
+    val voteCount: String,
+
+    val movieType: MovieType
 ) {
     val rating: Float
         get() = voteAverage.div(BigDecimal(RATING_TO_STARS_RATIO)).toFloat()

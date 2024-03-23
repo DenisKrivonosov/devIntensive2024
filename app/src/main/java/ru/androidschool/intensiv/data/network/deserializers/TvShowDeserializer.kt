@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.network.deserializers
+package ru.androidschool.intensiv.data.network.deserializers
 
 import androidx.annotation.Keep
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -12,59 +12,66 @@ import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.decodeFromJsonElement
 import ru.androidschool.intensiv.BuildConfig
-import ru.androidschool.intensiv.data.model.movies.Movie
-import ru.androidschool.intensiv.network.BigDecimalNumericSerializer
+import ru.androidschool.intensiv.data.model.tv_series.TvShow
+import ru.androidschool.intensiv.data.network.BigDecimalNumericSerializer
 import java.math.BigDecimal
 
-internal object MovieDeserializer : KSerializer<Movie> {
+internal object TvShowDeserializer : KSerializer<TvShow> {
 
-    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Movie")
+    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("TvSerial")
 
-    override fun serialize(encoder: Encoder, value: Movie) {
-        throw UnsupportedOperationException("Serialization of MovieDeserializer is not supported")
+    override fun serialize(encoder: Encoder, value: TvShow) {
+        throw UnsupportedOperationException("Serialization of TvShow is not supported")
     }
 
-    override fun deserialize(decoder: Decoder): Movie {
+    override fun deserialize(decoder: Decoder): TvShow {
         require(decoder is JsonDecoder)
         val rootElement = decoder.decodeJsonElement()
-        val remote = decoder.json.decodeFromJsonElement<RemoteMovie>(rootElement)
+        val remote = decoder.json.decodeFromJsonElement<TvShowRemote>(rootElement)
 
-        return Movie(
+        return TvShow(
             id = remote.id,
             adult = remote.adult,
-            backdropPath = "${BuildConfig.POSTER_PATH_PREFIX}${remote.backdropPath}",
+            backdropPath = remote.backdropPath?.let {
+                "${BuildConfig.POSTER_PATH_PREFIX}${remote.backdropPath}"
+            },
             genreIds = remote.genreIds,
             originalLanguage = remote.originalLanguage,
-            originalTitle = remote.originalTitle,
+            originalName = remote.originalName,
             overview = remote.overview,
             popularity = remote.popularity,
-            posterPath = "${BuildConfig.POSTER_PATH_PREFIX}${remote.posterPath}",
-            releaseDate = remote.releaseDate,
-            title = remote.title,
-            video = remote.video,
+            posterPath = remote.posterPath?.let {
+                "${BuildConfig.POSTER_PATH_PREFIX}${remote.posterPath}"
+            },
+            firstAirDate = remote.firstAirDate,
+            originalCountry = remote.originalCountry,
             voteAverage = remote.voteAverage,
             voteCount = remote.voteCount,
+            name = remote.name
         )
     }
 
     @Keep
     @Serializable
-    private class RemoteMovie @OptIn(ExperimentalSerializationApi::class) constructor(
+    private class TvShowRemote @OptIn(ExperimentalSerializationApi::class) constructor(
         val adult: Boolean,
 
         @SerialName("backdrop_path")
-        val backdropPath: String,
+        val backdropPath: String?,
 
         @SerialName("genre_ids")
         val genreIds: List<String>,
 
         val id: Int,
 
+        @SerialName("original_country")
+        val originalCountry: List<String>? = null,
+
         @SerialName("original_language")
         val originalLanguage: String,
 
-        @SerialName("original_title")
-        val originalTitle: String,
+        @SerialName("original_name")
+        val originalName: String,
 
         val overview: String,
 
@@ -72,13 +79,12 @@ internal object MovieDeserializer : KSerializer<Movie> {
         val popularity: BigDecimal,
 
         @SerialName("poster_path")
-        val posterPath: String,
+        val posterPath: String?,
 
-        @SerialName("release_date")
-        val releaseDate: String,
+        @SerialName("first_air_date")
+        val firstAirDate: String,
 
-        val title: String,
-        val video: Boolean,
+        val name: String,
 
         @SerialName("vote_average")
         @Serializable(with = BigDecimalNumericSerializer::class)

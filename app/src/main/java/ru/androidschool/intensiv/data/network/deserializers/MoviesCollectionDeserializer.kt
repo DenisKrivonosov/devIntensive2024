@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.network.deserializers
+package ru.androidschool.intensiv.data.network.deserializers
 
 import androidx.annotation.Keep
 import kotlinx.serialization.KSerializer

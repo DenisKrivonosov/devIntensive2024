@@ -1,8 +1,7 @@
-package ru.androidschool.intensiv.network
+package ru.androidschool.intensiv.data.network
 
 import androidx.annotation.IntRange
 import io.reactivex.Single
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -14,7 +13,7 @@ import ru.androidschool.intensiv.data.model.tv_series.TvShowsResponse
 /**
  * API documentation here https://developer.themoviedb.org/docs/getting-started
  */
-interface MovieApiInterface {
+interface MovieApi {
 
     /**
      * API now playing movies: https://developer.themoviedb.org/reference/movie-now-playing-list
@@ -22,7 +21,7 @@ interface MovieApiInterface {
     @GET("movie/now_playing")
     fun getNowPlayingMovies(
         @Query("page") @IntRange(from = 1) page: Int = 1,
-        @Query("language") language: String
+        @Query("language") language: String = "ru"
     ): Single<MoviesResponse>
 
     /**
@@ -31,7 +30,7 @@ interface MovieApiInterface {
     @GET("movie/upcoming")
     fun getUpcomingMovies(
         @Query("page") @IntRange(from = 1) page: Int = 1,
-        @Query("language") language: String
+        @Query("language") language: String = "ru"
     ): Single<MoviesResponse>
 
     /**
@@ -40,7 +39,7 @@ interface MovieApiInterface {
     @GET("movie/popular")
     fun getPopularMovies(
         @Query("page") @IntRange(from = 1) page: Int = 1,
-        @Query("language") language: String
+        @Query("language") language: String = "ru"
     ): Single<MoviesResponse>
 
     /**
@@ -49,7 +48,7 @@ interface MovieApiInterface {
     @GET("tv/popular")
     fun getPopularTvShows(
         @Query("page") @IntRange(from = 1) page: Int = 1,
-        @Query("language") language: String
+        @Query("language") language: String = "ru"
     ): Single<TvShowsResponse>
 
     /**
@@ -58,7 +57,7 @@ interface MovieApiInterface {
     @GET("movie/{movieId}")
     fun getMovieDetails(
         @Path("movieId") movieId: Int,
-        @Query("language") language: String
+        @Query("language") language: String = "ru"
     ): Single<MovieDetails>
 
     /**
@@ -67,6 +66,6 @@ interface MovieApiInterface {
     @GET("movie/{movieId}/credits")
     fun getMovieCredits(
         @Path("movieId") movieId: Int,
-        @Query("language") language: String
+        @Query("language") language: String = "ru"
     ): Single<MovieCreditsResponse>
 }

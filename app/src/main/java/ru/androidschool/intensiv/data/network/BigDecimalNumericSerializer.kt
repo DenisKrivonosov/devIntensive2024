@@ -1,6 +1,6 @@
 @file:Suppress("MaxLineLength")
 
-package ru.androidschool.intensiv.network
+package ru.androidschool.intensiv.data.network
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
