@@ -14,6 +14,7 @@ import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.repository.MoviesRepository
 import ru.androidschool.intensiv.databinding.TvShowsFragmentBinding
 import ru.androidschool.intensiv.ext.applySchedulers
+import ru.androidschool.intensiv.ui.tvshows.recycler.DividerDecoration
 import timber.log.Timber
 
 class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
@@ -35,6 +36,7 @@ class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initUi()
 
         val popularTvShowsSource = MoviesRepository.getPopularTvShows(language = "ru")
 
@@ -58,6 +60,10 @@ class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
     override fun onStop() {
         compositeDisposable.clear()
         super.onStop()
+    }
+
+    private fun initUi() {
+        binding.tvShowsRecyclerView.addItemDecoration(DividerDecoration())
     }
 
     companion object {
