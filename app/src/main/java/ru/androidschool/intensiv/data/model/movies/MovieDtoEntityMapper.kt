@@ -1,9 +1,9 @@
 package ru.androidschool.intensiv.data.model.movies
 
-class MovieDtoMapper {
+class MovieDtoToEntityMapper {
 
-    fun mapToMovieDto(movie: Movie, movieType: MovieType): MovieDto {
-        return MovieDto(
+    fun mapToMovieEntity(movie: Movie, movieType: MovieType): MovieEntity {
+        return MovieEntity(
             id = movie.id,
             adult = movie.adult,
             backdropPath = movie.backdropPath,

@@ -14,8 +14,8 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.disposables.CompositeDisposable
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.model.movies.MovieDto
-import ru.androidschool.intensiv.data.repository.MovieDbRepository
+import ru.androidschool.intensiv.data.model.movies.MovieEntity
+import ru.androidschool.intensiv.data.repository.LikesRepository
 import ru.androidschool.intensiv.databinding.FragmentWatchlistBinding
 import ru.androidschool.intensiv.ext.applySchedulers
 import ru.androidschool.intensiv.ui.feed.MovieItem
@@ -53,7 +53,7 @@ class WatchlistFragment : Fragment() {
         binding.moviesRecyclerView.layoutManager = GridLayoutManager(context, 2)
         binding.moviesRecyclerView.adapter = adapter.apply { addAll(listOf()) }
 
-        val nowPlayingMoviesSource = MovieDbRepository.observeLikedMovies()
+        val nowPlayingMoviesSource = LikesRepository.observeLikedMovies()
 
         val nowPlayingMoviesSourceDisposable = nowPlayingMoviesSource
             .applySchedulers()
@@ -84,7 +84,7 @@ class WatchlistFragment : Fragment() {
         super.onStop()
     }
 
-    private fun openMovieDetails(movie: MovieDto) {
+    private fun openMovieDetails(movie: MovieEntity) {
         val bundle = Bundle()
         bundle.putInt(KEY_MOVIE_ID, movie.id)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)

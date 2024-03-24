@@ -21,6 +21,7 @@
         android:layout_marginEnd="@dimen/material_margin_normal"
         android:scaleType="centerCrop"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
+        app:strokeColor="@null"
         tools:src="@drawable/ic_avatar" />
 
     <TextView

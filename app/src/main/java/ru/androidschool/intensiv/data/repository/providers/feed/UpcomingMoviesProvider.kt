@@ -2,8 +2,8 @@ package ru.androidschool.intensiv.data.repository.providers.feed
 
 import io.reactivex.Observable
 import ru.androidschool.intensiv.data.database.MoviesDao
-import ru.androidschool.intensiv.data.model.movies.MovieDto
-import ru.androidschool.intensiv.data.model.movies.MovieDtoMapper
+import ru.androidschool.intensiv.data.model.movies.MovieDtoToEntityMapper
+import ru.androidschool.intensiv.data.model.movies.MovieEntity
 import ru.androidschool.intensiv.data.model.movies.MovieType
 import ru.androidschool.intensiv.data.network.MovieApi
 import ru.androidschool.intensiv.data.repository.CacheProvider
@@ -11,12 +11,12 @@ import ru.androidschool.intensiv.data.repository.CacheProvider
 class UpcomingMoviesProvider(
     private val dao: MoviesDao,
     private val api: MovieApi,
-    private val movieDtoMapper: MovieDtoMapper
-) : CacheProvider<List<MovieDto>>() {
-    override fun createRemoteObservable(): Observable<List<MovieDto>> {
+    private val mapper: MovieDtoToEntityMapper
+) : CacheProvider<List<MovieEntity>>() {
+    override fun createRemoteObservable(): Observable<List<MovieEntity>> {
         return api.getUpcomingMovies().map {
             it.results.map { movie ->
-                movieDtoMapper.mapToMovieDto(
+                mapper.mapToMovieEntity(
                     movie = movie, movieType = MovieType.UPCOMING
                 )
             }
@@ -25,7 +25,7 @@ class UpcomingMoviesProvider(
             .toObservable()
     }
 
-    override fun createCacheObservable(): Observable<List<MovieDto>> {
+    override fun createCacheObservable(): Observable<List<MovieEntity>> {
 
         return dao.getMoviesByType(movieType = MovieType.UPCOMING).toObservable()
     }

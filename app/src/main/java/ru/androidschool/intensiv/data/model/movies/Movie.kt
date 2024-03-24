@@ -1,8 +1,6 @@
 package ru.androidschool.intensiv.data.model.movies
 
 import androidx.annotation.Keep
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

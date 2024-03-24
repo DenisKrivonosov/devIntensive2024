@@ -3,13 +3,13 @@ package ru.androidschool.intensiv.ui.feed
 import android.view.View
 import com.xwray.groupie.viewbinding.BindableItem
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.model.movies.MovieDto
+import ru.androidschool.intensiv.data.model.movies.MovieEntity
 import ru.androidschool.intensiv.databinding.ItemWithTextBinding
 import ru.androidschool.intensiv.ext.loadImage
 
 class MovieItem(
-    private val content: MovieDto,
-    private val onClick: (movie: MovieDto) -> Unit
+    private val content: MovieEntity,
+    private val onClick: (movie: MovieEntity) -> Unit
 ) : BindableItem<ItemWithTextBinding>() {
 
     override fun getLayout(): Int = R.layout.item_with_text
