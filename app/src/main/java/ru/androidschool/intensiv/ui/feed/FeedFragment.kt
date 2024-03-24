@@ -16,12 +16,13 @@ import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.model.movies.MovieDto
+import ru.androidschool.intensiv.data.model.movies.MovieEntity
 import ru.androidschool.intensiv.data.model.movies.MovieType
-import ru.androidschool.intensiv.data.repository.MovieDbRepository
+import ru.androidschool.intensiv.data.repository.MoviesRepository
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
 import ru.androidschool.intensiv.ext.applySchedulers
+import ru.androidschool.intensiv.ui.feed.recycler.MovieItem
 import ru.androidschool.intensiv.ui.movie_details.MovieDetailsFragment.Companion.KEY_MOVIE_ID
 import timber.log.Timber
 
@@ -72,16 +73,16 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
 
             )
 
-        val nowPlayingMoviesSource = MovieDbRepository.getNowPlayingMovies()
-        val upcomingMoviesSource = MovieDbRepository.getUpcomingMovies()
-        val getPopularMoviesSource = MovieDbRepository.getPopularMovies()
+        val nowPlayingMoviesSource = MoviesRepository.getNowPlayingMovies()
+        val upcomingMoviesSource = MoviesRepository.getUpcomingMovies()
+        val getPopularMoviesSource = MoviesRepository.getPopularMovies()
 
         val allMoviesDisposable = Observables.combineLatest(
             nowPlayingMoviesSource,
             upcomingMoviesSource,
             getPopularMoviesSource
         ) { nowPlayingMovies, upcomingMovies, popularMovies ->
-            val map = HashMap<MovieType, List<MovieDto>>()
+            val map = HashMap<MovieType, List<MovieEntity>>()
             map[MovieType.NOW_PLAYING] = nowPlayingMovies
             map[MovieType.UPCOMING] = upcomingMovies
             map[MovieType.POPULAR] = popularMovies
@@ -99,9 +100,23 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
                     val upcomingMovies = response[MovieType.UPCOMING]?.map {
                         MovieItem(it) { movie -> openMovieDetails(movie) }
                     }
-                    val allMovies = nowPlayingMovies.orEmpty() +
-                            popularMovies.orEmpty() +
-                            upcomingMovies.orEmpty()
+                    val nowPlayingMoviesContainer = MainCardContainer(
+                        title = R.string.now_playing,
+                        items = nowPlayingMovies ?: emptyList()
+                    )
+                    val popularMoviesContainer = MainCardContainer(
+                        title = R.string.popular,
+                        items = popularMovies ?: emptyList()
+                    )
+                    val upcomingMoviesContainer = MainCardContainer(
+                        title = R.string.upcoming,
+                        items = upcomingMovies ?: emptyList()
+                    )
+                    val allMovies = listOf(
+                        nowPlayingMoviesContainer,
+                        popularMoviesContainer,
+                        upcomingMoviesContainer
+                    )
                     binding.moviesRecyclerView.adapter = adapter.apply {
                         clear()
                         addAll(allMovies)
@@ -119,7 +134,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         )
     }
 
-    private fun openMovieDetails(movie: MovieDto) {
+    private fun openMovieDetails(movie: MovieEntity) {
         val bundle = Bundle()
         bundle.putInt(KEY_MOVIE_ID, movie.id)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)

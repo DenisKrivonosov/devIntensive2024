@@ -51,14 +51,14 @@
                     android:layout_gravity="start"
                     android:background="@drawable/toolbar_arrow_back"
                     android:contentDescription="@string/movie_details_header_like_description" />
-                <ImageButton
+                <CheckBox
                     android:id="@+id/movieActionLike"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="30dp"
                     android:layout_gravity="end"
-                    android:background="@drawable/movie_details_not_liked_icon"
+                    android:button="@drawable/movie_details_like_checkbox"
                     android:contentDescription="@string/movie_details_header_like_description" />
             </androidx.appcompat.widget.Toolbar>
 

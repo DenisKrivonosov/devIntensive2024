@@ -6,12 +6,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import ru.androidschool.intensiv.data.model.movies.Genre
-import ru.androidschool.intensiv.data.model.movies.MovieDto
+import ru.androidschool.intensiv.data.model.movies.MovieEntity
 import ru.androidschool.intensiv.data.model.movies.MovieLike
 
 @Database(
     entities = [
-        MovieDto::class,
+        MovieEntity::class,
         Genre::class,
         MovieLike::class
     ],
@@ -20,6 +20,7 @@ import ru.androidschool.intensiv.data.model.movies.MovieLike
 @TypeConverters(Converters::class)
 abstract class MoviesDatabase : RoomDatabase() {
     abstract fun moviesDao(): MoviesDao
+    abstract fun movieLikesDao(): MovieLikesDao
 
     companion object {
         private var instance: MoviesDatabase? = null

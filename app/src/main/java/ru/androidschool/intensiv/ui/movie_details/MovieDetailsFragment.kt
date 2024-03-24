@@ -4,20 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
+import coil.load
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.model.movies.CompositeMovieDetails
-import ru.androidschool.intensiv.data.repository.MovieDbRepository
+import ru.androidschool.intensiv.data.repository.LikesRepository
+import ru.androidschool.intensiv.data.repository.MoviesRepository
 import ru.androidschool.intensiv.databinding.MovieDetailsFragmentBinding
 import ru.androidschool.intensiv.ext.applySchedulers
-import ru.androidschool.intensiv.ext.loadImage
 import timber.log.Timber
 
 class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
@@ -42,19 +42,19 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
 
         val movieId = this.arguments?.getInt(KEY_MOVIE_ID, 1) ?: 1
 
-        val movieDetailsSource = MovieDbRepository.getMovieDetails(
+        val movieDetailsSource = MoviesRepository.getMovieDetails(
             movieId = movieId
         ).toObservable()
 
-        val movieCreditsSource = MovieDbRepository.getMovieCredits(
+        val movieCreditsSource = MoviesRepository.getMovieCredits(
             movieId = movieId
         ).toObservable()
 
-        val isMovieLikedObservable = MovieDbRepository.observeIsMovieLiked(
+        val isMovieLikedObservable = LikesRepository.observeIsMovieLiked(
             movieId = movieId
         )
 
-        val changeMovieIsLikedCompletable = MovieDbRepository.changeMovieIsLiked(
+        val changeMovieIsLikedCompletable = LikesRepository.changeMovieIsLiked(
             movieId = movieId
         )
 
@@ -71,7 +71,7 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
             .subscribe(
                 { compositeMovieDetails ->
                     with(compositeMovieDetails.movieDetails) {
-                        binding.posterImageView.loadImage(posterPath)
+                        binding.posterImageView.load(posterPath)
                         binding.movieTitle.text = title
                         binding.movieRating.rating = rating
                         binding.movieOverview.text = overview
@@ -80,20 +80,7 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
                         val castList = map { CastItem(it) }
                         binding.movieCastRecycler.adapter = adapter.apply { addAll(castList) }
                     }
-                    binding.movieActionLike.background =
-                        if (compositeMovieDetails.isMovieLiked) {
-                            ResourcesCompat.getDrawable(
-                                requireContext().resources,
-                                R.drawable.movie_details_liked_button,
-                                requireContext().theme
-                            )
-                        } else {
-                            ResourcesCompat.getDrawable(
-                                requireContext().resources,
-                                R.drawable.movie_details_not_liked_icon,
-                                requireContext().theme
-                            )
-                        }
+                    binding.movieActionLike.isChecked = compositeMovieDetails.isMovieLiked
                 },
                 { error ->
                     // Log error here since request failed

@@ -1,11 +1,11 @@
 package ru.androidschool.intensiv.ui.watchlist
 
 import android.view.View
+import coil.load
 import com.xwray.groupie.viewbinding.BindableItem
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.model.movies.Movie
 import ru.androidschool.intensiv.databinding.ItemSmallBinding
-import ru.androidschool.intensiv.ext.loadImage
 
 class MoviePreviewItem(
     private val content: Movie,
@@ -16,7 +16,7 @@ class MoviePreviewItem(
 
     override fun bind(view: ItemSmallBinding, position: Int) {
         with(view.imagePreview) {
-            loadImage(content.posterPath)
+            load(content.posterPath)
             setOnClickListener {
                 onClick.invoke(content)
             }

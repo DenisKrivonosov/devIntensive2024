@@ -11,9 +11,11 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.disposables.CompositeDisposable
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.repository.MovieDbRepository
+import ru.androidschool.intensiv.data.repository.MoviesRepository
 import ru.androidschool.intensiv.databinding.TvShowsFragmentBinding
 import ru.androidschool.intensiv.ext.applySchedulers
+import ru.androidschool.intensiv.ui.tvshows.recycler.DividerDecoration
+import ru.androidschool.intensiv.ui.tvshows.recycler.TvShowItem
 import timber.log.Timber
 
 class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
@@ -35,8 +37,9 @@ class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initUi()
 
-        val popularTvShowsSource = MovieDbRepository.getPopularTvShows(language = "ru")
+        val popularTvShowsSource = MoviesRepository.getPopularTvShows(language = "ru")
 
         val popularTvShowsSourceDisposable = popularTvShowsSource
             .applySchedulers()
@@ -58,6 +61,10 @@ class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
     override fun onStop() {
         compositeDisposable.clear()
         super.onStop()
+    }
+
+    private fun initUi() {
+        binding.tvShowsRecyclerView.addItemDecoration(DividerDecoration())
     }
 
     companion object {
