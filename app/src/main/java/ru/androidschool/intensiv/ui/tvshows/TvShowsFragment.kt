@@ -15,6 +15,7 @@ import ru.androidschool.intensiv.data.repository.MoviesRepository
 import ru.androidschool.intensiv.databinding.TvShowsFragmentBinding
 import ru.androidschool.intensiv.ext.applySchedulers
 import ru.androidschool.intensiv.ui.tvshows.recycler.DividerDecoration
+import ru.androidschool.intensiv.ui.tvshows.recycler.TvShowItem
 import timber.log.Timber
 
 class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {

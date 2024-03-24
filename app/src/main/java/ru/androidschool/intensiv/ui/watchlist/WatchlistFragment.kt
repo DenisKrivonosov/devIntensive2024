@@ -18,7 +18,7 @@ import ru.androidschool.intensiv.data.model.movies.MovieEntity
 import ru.androidschool.intensiv.data.repository.LikesRepository
 import ru.androidschool.intensiv.databinding.FragmentWatchlistBinding
 import ru.androidschool.intensiv.ext.applySchedulers
-import ru.androidschool.intensiv.ui.feed.MovieItem
+import ru.androidschool.intensiv.ui.feed.recycler.MovieItem
 import ru.androidschool.intensiv.ui.movie_details.MovieDetailsFragment.Companion.KEY_MOVIE_ID
 import timber.log.Timber
 

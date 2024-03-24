@@ -22,6 +22,7 @@ import ru.androidschool.intensiv.data.repository.MoviesRepository
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
 import ru.androidschool.intensiv.ext.applySchedulers
+import ru.androidschool.intensiv.ui.feed.recycler.MovieItem
 import ru.androidschool.intensiv.ui.movie_details.MovieDetailsFragment.Companion.KEY_MOVIE_ID
 import timber.log.Timber
 
@@ -99,9 +100,23 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
                     val upcomingMovies = response[MovieType.UPCOMING]?.map {
                         MovieItem(it) { movie -> openMovieDetails(movie) }
                     }
-                    val allMovies = nowPlayingMovies.orEmpty() +
-                            popularMovies.orEmpty() +
-                            upcomingMovies.orEmpty()
+                    val nowPlayingMoviesContainer = MainCardContainer(
+                        title = R.string.now_playing,
+                        items = nowPlayingMovies ?: emptyList()
+                    )
+                    val popularMoviesContainer = MainCardContainer(
+                        title = R.string.popular,
+                        items = popularMovies ?: emptyList()
+                    )
+                    val upcomingMoviesContainer = MainCardContainer(
+                        title = R.string.upcoming,
+                        items = upcomingMovies ?: emptyList()
+                    )
+                    val allMovies = listOf(
+                        nowPlayingMoviesContainer,
+                        popularMoviesContainer,
+                        upcomingMoviesContainer
+                    )
                     binding.moviesRecyclerView.adapter = adapter.apply {
                         clear()
                         addAll(allMovies)

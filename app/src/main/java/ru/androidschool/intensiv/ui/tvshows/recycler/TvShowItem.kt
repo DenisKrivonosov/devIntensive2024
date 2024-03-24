@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.ui.tvshows
+package ru.androidschool.intensiv.ui.tvshows.recycler
 
 import android.view.View
 import com.xwray.groupie.viewbinding.BindableItem
