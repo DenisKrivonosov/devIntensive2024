@@ -1,14 +1,11 @@
 package ru.androidschool.intensiv.data.model.movies
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import java.math.BigDecimal
 
-internal const val MOVIES_TABLE_NAME = "movies"
+private const val RATING_TO_STARS_RATIO = 2
 
-@Entity(tableName = MOVIES_TABLE_NAME)
-data class MovieEntity(
-    @PrimaryKey val id: Int,
+data class MovieVO(
+    val id: Int,
     val adult: Boolean,
     val backdropPath: String,
     val genreIds: List<Genre>,
@@ -23,4 +20,7 @@ data class MovieEntity(
     val voteAverage: BigDecimal,
     val voteCount: String,
     val movieType: MovieType
-)
+) {
+    val rating: Float
+        get() = voteAverage.div(BigDecimal(RATING_TO_STARS_RATIO)).toFloat()
+}

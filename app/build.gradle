@@ -104,6 +104,10 @@ dependencies {
     implementation libs.retrofit.adapter.rxjava2
     implementation libs.logging.interceptor
 
+    //shimmers
+    // facebook loading effect
+    implementation libs.shimmer
+
     //rx
     implementation libs.rxandroid
     implementation libs.rxjava

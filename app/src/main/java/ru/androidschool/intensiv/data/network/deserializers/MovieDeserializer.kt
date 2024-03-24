@@ -13,24 +13,24 @@ import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.decodeFromJsonElement
 import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.data.model.movies.Genre
-import ru.androidschool.intensiv.data.model.movies.Movie
+import ru.androidschool.intensiv.data.model.movies.MovieDto
 import ru.androidschool.intensiv.data.network.BigDecimalNumericSerializer
 import java.math.BigDecimal
 
-internal object MovieDeserializer : KSerializer<Movie> {
+internal object MovieDeserializer : KSerializer<MovieDto> {
 
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Movie")
 
-    override fun serialize(encoder: Encoder, value: Movie) {
+    override fun serialize(encoder: Encoder, value: MovieDto) {
         throw UnsupportedOperationException("Serialization of MovieDeserializer is not supported")
     }
 
-    override fun deserialize(decoder: Decoder): Movie {
+    override fun deserialize(decoder: Decoder): MovieDto {
         require(decoder is JsonDecoder)
         val rootElement = decoder.decodeJsonElement()
         val remote = decoder.json.decodeFromJsonElement<RemoteMovie>(rootElement)
 
-        return Movie(
+        return MovieDto(
             id = remote.id,
             adult = remote.adult,
             backdropPath = "${BuildConfig.POSTER_PATH_PREFIX}${remote.backdropPath}",
