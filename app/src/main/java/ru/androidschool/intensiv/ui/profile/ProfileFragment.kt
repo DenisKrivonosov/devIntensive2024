@@ -11,9 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
+import coil.load
+import coil.transform.CircleCropTransformation
 import com.google.android.material.tabs.TabLayoutMediator
-import com.squareup.picasso.Picasso
-import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.databinding.FragmentProfileBinding
 
@@ -44,11 +44,10 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Picasso.get()
-            .load(R.drawable.ic_avatar)
-            .transform(CropCircleTransformation())
-            .placeholder(R.drawable.ic_avatar)
-            .into(binding.avatar)
+        binding.avatar.load(R.drawable.ic_avatar) {
+            transformations(CircleCropTransformation())
+            placeholder(R.drawable.ic_avatar)
+        }
 
         profileTabLayoutTitles = resources.getStringArray(R.array.tab_titles)
 

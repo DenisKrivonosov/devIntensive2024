@@ -86,9 +86,9 @@ dependencies {
     implementation libs.navigation.fragment.ktx
     implementation libs.navigation.ui.ktx
 
-    // Picasso
-    implementation libs.picasso
-    implementation libs.picasso.transformations
+    //Coil
+    implementation libs.coil
+    implementation libs.coil.transformations
 
     implementation libs.recyclerview
 

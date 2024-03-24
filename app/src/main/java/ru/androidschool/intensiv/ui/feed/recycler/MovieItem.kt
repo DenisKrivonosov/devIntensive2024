@@ -1,11 +1,11 @@
 package ru.androidschool.intensiv.ui.feed.recycler
 
 import android.view.View
+import coil.load
 import com.xwray.groupie.viewbinding.BindableItem
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.model.movies.MovieEntity
 import ru.androidschool.intensiv.databinding.ItemWithTextBinding
-import ru.androidschool.intensiv.ext.loadImage
 
 class MovieItem(
     private val content: MovieEntity,
@@ -20,7 +20,7 @@ class MovieItem(
         view.content.setOnClickListener {
             onClick.invoke(content)
         }
-        view.imagePreview.loadImage(content.posterPath)
+        view.imagePreview.load(content.posterPath)
     }
 
     override fun initializeViewBinding(v: View) = ItemWithTextBinding.bind(v)

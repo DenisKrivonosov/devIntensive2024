@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
+import coil.load
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.disposables.CompositeDisposable
@@ -17,7 +18,6 @@ import ru.androidschool.intensiv.data.repository.LikesRepository
 import ru.androidschool.intensiv.data.repository.MoviesRepository
 import ru.androidschool.intensiv.databinding.MovieDetailsFragmentBinding
 import ru.androidschool.intensiv.ext.applySchedulers
-import ru.androidschool.intensiv.ext.loadImage
 import timber.log.Timber
 
 class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
@@ -71,7 +71,7 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
             .subscribe(
                 { compositeMovieDetails ->
                     with(compositeMovieDetails.movieDetails) {
-                        binding.posterImageView.loadImage(posterPath)
+                        binding.posterImageView.load(posterPath)
                         binding.movieTitle.text = title
                         binding.movieRating.rating = rating
                         binding.movieOverview.text = overview
