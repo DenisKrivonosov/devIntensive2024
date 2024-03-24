@@ -6,67 +6,117 @@ import ru.androidschool.intensiv.MovieFinderApp
 import ru.androidschool.intensiv.data.database.MoviesDatabase
 import ru.androidschool.intensiv.data.model.movies.MovieCreditsResponse
 import ru.androidschool.intensiv.data.model.movies.MovieDetails
-import ru.androidschool.intensiv.data.model.movies.MovieDtoToEntityMapper
-import ru.androidschool.intensiv.data.model.movies.MovieEntity
+import ru.androidschool.intensiv.data.model.movies.MovieVO
+import ru.androidschool.intensiv.data.model.movies.mapper.MovieDtoToMovieWithMovieTypeDtoMapper
+import ru.androidschool.intensiv.data.model.movies.mapper.MovieEntityToVOMapper
+import ru.androidschool.intensiv.data.model.movies.mapper.MovieWithMovieTypeDtoToEntityMapper
+import ru.androidschool.intensiv.data.model.movies.mapper.MovieWithMovieTypeDtoToVOMapper
 import ru.androidschool.intensiv.data.model.tv_series.TvShowsResponse
 import ru.androidschool.intensiv.data.network.MovieApiClient
 import ru.androidschool.intensiv.data.repository.providers.feed.NowPlayingMoviesProvider
 import ru.androidschool.intensiv.data.repository.providers.feed.PopularMoviesProvider
 import ru.androidschool.intensiv.data.repository.providers.feed.UpcomingMoviesProvider
 
-object MoviesRepository {
+interface MoviesRepository {
+    fun getNowPlayingMovies(): Observable<List<MovieVO>>
+
+    fun getUpcomingMovies(): Observable<List<MovieVO>>
+
+    fun getPopularMovies(): Observable<List<MovieVO>>
+
+    fun observeLikedMovies(): Observable<List<MovieVO>>
+
+    fun getPopularTvShows(
+        page: Int = 1,
+        language: String = "ru"
+    ): Single<TvShowsResponse>
+
+    fun getMovieDetails(
+        movieId: Int,
+        language: String = "ru"
+    ): Single<MovieDetails>
+
+    fun getMovieCredits(
+        movieId: Int,
+        language: String = "ru"
+    ): Single<MovieCreditsResponse>
+}
+
+object MoviesRepositoryImpl : MoviesRepository {
 
     private val api = MovieApiClient.apiClient
     private val dao = MoviesDatabase.get(MovieFinderApp.instance!!.applicationContext).moviesDao()
-    private val movieDtoEntityMapper = MovieDtoToEntityMapper()
+    private val likesDao = MoviesDatabase.get(
+        MovieFinderApp.instance!!.applicationContext
+    ).movieLikesDao()
+    private val moviedtoEnricherMapper = MovieDtoToMovieWithMovieTypeDtoMapper()
+    private val movieDtoEntityMapper = MovieWithMovieTypeDtoToEntityMapper()
+    private val movieEntityToVoMapper = MovieEntityToVOMapper()
+    private val movieDtoToVoMapper = MovieWithMovieTypeDtoToVOMapper()
+
 
     private val nowPlayingMoviesProvider = NowPlayingMoviesProvider(
         api = api,
         dao = dao,
-        mapper = movieDtoEntityMapper
+        dtoEnricherMapper = moviedtoEnricherMapper,
+        dtoToEntityMapper = movieDtoEntityMapper,
+        entityToVoMapper = movieEntityToVoMapper,
+        dtoToVoMapper = movieDtoToVoMapper
     )
 
     private val upcomingMoviesProvider = UpcomingMoviesProvider(
         api = api,
         dao = dao,
-        mapper = movieDtoEntityMapper
+        dtoEnricherMapper = moviedtoEnricherMapper,
+        dtoToEntityMapper = movieDtoEntityMapper,
+        entityToVoMapper = movieEntityToVoMapper,
+        dtoToVoMapper = movieDtoToVoMapper
     )
 
     private val popularMoviesProvider = PopularMoviesProvider(
         api = api,
         dao = dao,
-        mapper = movieDtoEntityMapper
+        dtoEnricherMapper = moviedtoEnricherMapper,
+        dtoToEntityMapper = movieDtoEntityMapper,
+        entityToVoMapper = movieEntityToVoMapper,
+        dtoToVoMapper = movieDtoToVoMapper
     )
 
-    fun getNowPlayingMovies(): Observable<List<MovieEntity>> {
+    override fun getNowPlayingMovies(): Observable<List<MovieVO>> {
         return nowPlayingMoviesProvider.getObservable()
     }
 
-    fun getUpcomingMovies(): Observable<List<MovieEntity>> {
+    override fun getUpcomingMovies(): Observable<List<MovieVO>> {
         return upcomingMoviesProvider.getObservable()
     }
 
-    fun getPopularMovies(): Observable<List<MovieEntity>> {
+    override fun getPopularMovies(): Observable<List<MovieVO>> {
         return popularMoviesProvider.getObservable()
     }
 
-    fun getPopularTvShows(
-        page: Int = 1,
+    override fun observeLikedMovies(): Observable<List<MovieVO>> {
+        return likesDao.observeLikedMovies().map {
+            movieEntityToVoMapper.toViewObject(it)
+        }
+    }
+
+    override fun getPopularTvShows(
+        page: Int,
         language: String
     ): Single<TvShowsResponse> {
         return MovieApiClient.apiClient.getPopularTvShows(page, language)
     }
 
-    fun getMovieDetails(
+    override fun getMovieDetails(
         movieId: Int,
-        language: String = "ru"
+        language: String
     ): Single<MovieDetails> {
         return MovieApiClient.apiClient.getMovieDetails(movieId, language)
     }
 
-    fun getMovieCredits(
+    override fun getMovieCredits(
         movieId: Int,
-        language: String = "ru"
+        language: String
     ): Single<MovieCreditsResponse> {
         return MovieApiClient.apiClient.getMovieCredits(movieId, language)
     }

@@ -1,14 +1,9 @@
 package ru.androidschool.intensiv.data.model.movies
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import java.math.BigDecimal
 
-internal const val MOVIES_TABLE_NAME = "movies"
-
-@Entity(tableName = MOVIES_TABLE_NAME)
-data class MovieEntity(
-    @PrimaryKey val id: Int,
+data class MovieWithMovieTypeDto(
+    val id: Int,
     val adult: Boolean,
     val backdropPath: String,
     val genreIds: List<Genre>,

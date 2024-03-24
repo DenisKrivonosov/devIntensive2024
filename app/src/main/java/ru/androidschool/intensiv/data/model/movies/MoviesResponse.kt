@@ -11,5 +11,5 @@ data class MoviesResponse(
     @SerialName("dates")
     val datesRange: MoviesDatesRange? = null,
     val page: Int,
-    val results: List<Movie>
+    val results: List<MovieDto>
 )

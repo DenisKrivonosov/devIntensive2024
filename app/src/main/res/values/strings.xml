@@ -20,6 +20,8 @@
     <string name="tv_show">Телесериалы</string>
     <string name="close">закрыть</string>
 
+    <string name="retry">Повторить</string>
+
     <string-array name="tab_titles">
         <item>23\n Понравилось</item>
         <item>@string/later</item>
